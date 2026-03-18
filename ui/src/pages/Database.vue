@@ -29,14 +29,14 @@
                     variant="outline"
                     icon="i-lucide-save"></UButton>
             </UFormField>
-            <UFormField label="Cleanup DB Immediately" class="mt-5 ml-5">
+            <UFormField label="Clean Up Database" class="mt-5 ml-5">
                 <UButton
                     @click="cleanup"
                     class="mt-3"
                     color="primary"
                     variant="outline"
                     icon="i-lucide-brush-cleaning">
-                    Cleanup
+                    Clean Up
                 </UButton>
             </UFormField>
         </template>
@@ -49,8 +49,8 @@
                 label="Refresh"
                 @click="refresh" />
             <UFormField
-                label="Enable automatic DB cleanup"
-                description="Automatic DB cleanup occurs 01:00 AM daily"
+                label="Enable automatic database clean-up"
+                description="Automatic database clean-up runs daily at 1:00 AM"
                 class="mt-5 ml-5">
                 <USwitch
                     @change="updateEnableAutoDbCleanup"

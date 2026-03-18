@@ -1,7 +1,7 @@
 <template>
     <div class="flex">
         <ProcessSelector v-model="selected"></ProcessSelector>
-        <UFormField label="Set the line count" class="ml-20">
+        <UFormField label="Line count" class="ml-20">
             <UInputNumber :min="1" v-model="count"></UInputNumber>
         </UFormField>
         <UFormField label="Auto refresh" class="ml-20">

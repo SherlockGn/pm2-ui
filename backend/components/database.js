@@ -328,6 +328,10 @@ export const getMetrics = (
     aggregate,
     sample
 ) => {
+    const allowedAggregates = ['AVG', 'SUM', 'MIN', 'MAX', 'COUNT']
+    if (!allowedAggregates.includes(aggregate?.toUpperCase())) {
+        throw new Error('Invalid aggregate function')
+    }
     const query = `
         WITH RECURSIVE time_spine(slot) AS (
             SELECT ? 
@@ -336,7 +340,7 @@ export const getMetrics = (
         )
         SELECT 
             ts.slot as x,
-            IFNULL(${aggregate}(m.metricValue), 0) as y
+            IFNULL(${aggregate.toUpperCase()}(m.metricValue), 0) as y
         FROM time_spine ts
         LEFT JOIN metric m ON 
             m.processId = ? AND 
@@ -616,7 +620,7 @@ export const getAdminLogsAndCount = (
         categoryList.forEach(category => paramList.push(category))
     }
 
-    if (successful !== null) {
+    if (successful != null) {
         conditions.push('successful = #')
         paramList.push(successful ? 1 : 0)
     }

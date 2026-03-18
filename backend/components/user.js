@@ -134,10 +134,10 @@ export const logInByJwt = async token => {
 export const update = async user => {
     const originalUserDataObject = getUserById(user.id)
     const userById = fromDataObject(originalUserDataObject)
-    userById.password = originalUserDataObject.password
     if (!userById) {
         throw new Error('User not found')
     }
+    userById.password = originalUserDataObject.password
     if (user.displayName) {
         userById.displayName = user.displayName
     }

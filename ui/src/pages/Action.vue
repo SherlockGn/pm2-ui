@@ -173,7 +173,7 @@ const kill = async () => {
 
 const ping = async () => {
     createTerminalResultBlade({
-        title: 'Ping or daemonized PM2',
+        title: 'Ping or start the PM2 daemon',
         autoRun: true,
         exec: async () => {
             return await actionStore.ping()

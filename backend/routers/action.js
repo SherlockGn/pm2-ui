@@ -20,7 +20,7 @@ router.post('/resetCounter/:id', checkProcess, async c => {
     c.set('ret', ret)
 })
 
-router.post('flushLog/:id', checkProcess, async c => {
+router.post('/flushLog/:id', checkProcess, async c => {
     c.set('act', 'flushLog')
     const ret = await flushLog(c.get('rsrc').pmId)
     c.set('ret', ret)

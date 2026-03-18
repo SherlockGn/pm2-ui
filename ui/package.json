@@ -9,6 +9,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@iconify-json/lucide": "^1.2.98",
+        "@iconify-json/streamline-stickies-color": "^1.2.2",
         "@nuxt/ui": "^4.4.0",
         "@unovis/vue": "^1.6.4",
         "axios": "^1.13.5",

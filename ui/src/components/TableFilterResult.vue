@@ -10,7 +10,11 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-    table: Object,
+    table: {
+        type: [Object, null],
+        required: false,
+        default: null
+    },
     total: Number
 })
 

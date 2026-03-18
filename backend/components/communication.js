@@ -85,7 +85,7 @@ export const trigger = async (process, name, userId, param) => {
         rsp: null
     })
     rpcQueue.push({ name, lastInsertRowid })
-    sendDataToProcessId({
+    await sendDataToProcessId({
         id: process.pmId,
         type: 'process:msg',
         topic: true,

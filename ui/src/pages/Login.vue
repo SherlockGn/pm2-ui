@@ -40,8 +40,8 @@ const login = async e => {
 
     if (!loginSuccess) {
         toast.add({
-            title: 'Invalid credential.',
-            description: 'The credential you input is invalid.',
+            title: 'Invalid credentials.',
+            description: 'The credentials you entered are invalid.',
             icon: 'i-lucide-x',
             color: 'error'
         })
@@ -52,7 +52,7 @@ const login = async e => {
     toast.add({
         title: userStore.currentUser.displayName,
         description:
-            "Welcome! You've logged in successfully. Now explore the apps by using PM2.",
+            "Welcome! You've logged in successfully. You can now manage your processes.",
         avatar: { icon: userStore.currentUser.avatar },
         color: 'primary'
     })

@@ -17,7 +17,7 @@
                 color="primary"
                 icon="i-lucide-database-backup"
                 variant="outline"
-                label="Start backup"
+                label="Create backup"
                 @click="startBackup" />
             <UButton
                 class="ml-4"

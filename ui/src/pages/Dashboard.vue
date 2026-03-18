@@ -188,7 +188,7 @@ const navigators = [
         ]
     },
     {
-        label: 'Admininistration',
+        label: 'Administration',
         icon: 'i-lucide-chess-king',
         defaultOpen: true,
         children: [

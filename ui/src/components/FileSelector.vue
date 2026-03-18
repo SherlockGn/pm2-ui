@@ -23,7 +23,6 @@
     <div class="relative">
         <div class="flex group">
             <UInput
-                v-model="value"
                 :placeholder="props.placeholder"
                 class="w-100"
                 :value="modelValue"

@@ -51,8 +51,9 @@ import { upperFirst } from 'scule'
 
 const props = defineProps({
     table: {
-        type: Object,
-        required: true
+        type: [Object, null],
+        required: false,
+        default: null
     },
     useFilter: {
         type: Boolean,

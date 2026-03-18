@@ -1,10 +1,32 @@
 import { platform } from 'node:os'
 import { join } from 'node:path'
 import { stat } from 'node:fs/promises'
-import { spawn } from 'node:child_process'
+import { spawn, exec } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
 
 export const isWin = platform() === 'win32'
+
+let isAdmin = null
+
+export const checkIsAdmin = async () => {
+    if (isAdmin !== null) {
+        return isAdmin
+    }
+    if (!isWin) {
+        return null
+    }
+    return await new Promise(resolve => {
+        exec('net session', err => {
+            if (err) {
+                isAdmin = false
+                resolve(false)
+            } else {
+                isAdmin = true
+                resolve(true)
+            }
+        })
+    })
+}
 
 const runCmd = async (command, args) => {
     return new Promise((resolve, reject) => {
@@ -97,8 +119,8 @@ export const runCmdAdvanced = async (command, args, options) => {
 
 const getGlobalPM2Path = async () => {
     const { stdout, stderr } = await runCmd('npm', ['root', '-g'])
-    if (stderr) {
-        throw new Error(stderr)
+    if (!stdout.trim()) {
+        throw new Error(`Failed to get global npm root: ${stderr}`)
     }
     const path = join(stdout.trim(), 'pm2', 'index.js')
     await stat(path)
@@ -129,6 +151,12 @@ export const runPM2CLI = async args => {
 }
 
 export const ensurePM2Env = async () => {
+    if (isWin && !(await checkIsAdmin())) {
+        console.warn(
+            'Not running with admin privileges, PM2 may not work properly.'
+        )
+    }
+
     const version = await runPM2('getVersion')
 
     const o = await runPM2CLI(['--version'])

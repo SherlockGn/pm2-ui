@@ -44,7 +44,7 @@ const toDataObject = backup => {
     const deployments =
         backup.deployments == null ? null : JSON.stringify(backup.deployments)
     const metadata = backup.metadata ?? {}
-    metadata.size = apps?.length ?? 0 + deployments?.length ?? 0
+    metadata.size = (apps?.length ?? 0) + (deployments?.length ?? 0)
     return {
         id: backup.id,
         name: backup.name,

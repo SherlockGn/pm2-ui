@@ -1,8 +1,6 @@
 import { createApp, ref } from 'vue'
 import TerminalResultBlade from './components/TerminalResultBlade.vue'
 
-const toast = useToast()
-
 export const formatDate = date => {
     if (!date) {
         return 'N/A'
@@ -64,7 +62,7 @@ export const toFriendlyMemory = bytes => {
 }
 
 export const addSuccessfulToast = message => {
-    toast.add({
+    useToast().add({
         title: message,
         color: 'success',
         icon: 'i-lucide-circle-check'
@@ -72,7 +70,7 @@ export const addSuccessfulToast = message => {
 }
 
 export const addErrorToast = message => {
-    toast.add({
+    useToast().add({
         title: message,
         color: 'error',
         icon: 'i-lucide-circle-x'

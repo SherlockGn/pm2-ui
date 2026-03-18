@@ -34,6 +34,7 @@ const monitor = async () => {
     ) {
         addMetrics(buffer)
         buffer = []
+        lastInsert = Date.now()
     }
 }
 

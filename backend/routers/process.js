@@ -23,7 +23,7 @@ router.get('/', filterResult, async c => {
 router.post('/create', async c => {
     const user = c.get('user')
     const app = await c.req.json()
-    const willStart = c.req.query('start').toLowerCase() === 'true'
+    const willStart = c.req.query('start')?.toLowerCase() === 'true'
     if (willStart) {
         c.set('act', 'createAndStart')
         await createAndStart(app, user.id)
@@ -68,7 +68,7 @@ router.delete('/:id', checkProcess, async c => {
 })
 
 router.get('/log/:id', checkProcess, async c => {
-    const lineCount = +c.req.query('lineCount') ?? 100
+    const lineCount = +(c.req.query('lineCount') ?? 100)
     const log = await readLogs(c.get('rsrc'), lineCount)
     c.set('ret', log)
 })

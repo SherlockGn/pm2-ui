@@ -8,7 +8,7 @@
                 variant="outline"
                 label="Refresh"
                 @click="refreshSettings" />
-            <UFormField label="Subscribed message names" class="mt-5 ml-5">
+            <UFormField label="Message subscriptions" class="mt-5 ml-5">
                 <StringList
                     v-model="kvStore.settings.subscribedMsgNames"></StringList>
                 <UButton
