@@ -4,14 +4,14 @@
         direction="right"
         :handle="false"
         :dismissible="true"
-        v-model:open="userStore.userBladeOpen">
+        :open="props.open"
+        @update:open="e => e || emit('cancel')"
+        @animationEnd="e => e || emit('close')">
         <template #body>
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
                 <h2 class="text-highlighted font-semibold">
                     {{
-                        userStore.userBladeMode === 'create'
-                            ? 'Create user'
-                            : 'Update user'
+                        props.mode === 'create' ? 'Create user' : 'Update user'
                     }}
                 </h2>
 
@@ -19,54 +19,50 @@
                     color="neutral"
                     variant="ghost"
                     icon="i-lucide-x"
-                    @click="userStore.userBladeOpen = false" />
+                    @click="emit('cancel')" />
             </div>
             <div class="w-200 p-2">
                 <UForm
                     :validate="validate"
-                    :state="userStore.userBlade"
+                    :state="user"
                     class="space-y-4 flex flex-col h-[80vh]"
                     @submit="onSubmit">
                     <UFormField label="Email" name="email">
                         <UInput
-                            :disabled="userStore.userBladeMode === 'update'"
-                            v-model="userStore.userBlade.email"
+                            :disabled="props.mode === 'update'"
+                            v-model="user.email"
                             class="w-100" />
                     </UFormField>
 
                     <UFormField label="Enabled" name="enabled">
                         <USwitch
                             :disabled="
-                                userStore.userBladeMode === 'update' &&
-                                userStore.userBlade.id ===
-                                    userStore.currentUser?.id
+                                props.mode === 'update' &&
+                                user.id === userStore.currentUser?.id
                             "
-                            v-model="userStore.userBlade.enabled" />
+                            v-model="user.enabled" />
                     </UFormField>
 
                     <UFormField label="Super User" name="superUser">
                         <USwitch
                             :disabled="
-                                userStore.userBladeMode === 'update' &&
-                                userStore.userBlade.id ===
-                                    userStore.currentUser?.id
+                                props.mode === 'update' &&
+                                user.id === userStore.currentUser?.id
                             "
-                            v-model="userStore.userBlade.superUser" />
+                            v-model="user.superUser" />
                     </UFormField>
 
                     <UFormField label="Avatar" name="avatar">
-                        <AvatarSelector v-model="userStore.userBlade.avatar"></AvatarSelector>
+                        <AvatarSelector v-model="user.avatar"></AvatarSelector>
                     </UFormField>
 
                     <UFormField label="Display Name" name="displayName">
-                        <UInput
-                            v-model="userStore.userBlade.displayName"
-                            class="w-100" />
+                        <UInput v-model="user.displayName" class="w-100" />
                     </UFormField>
 
                     <UFormField label="Password" name="password">
                         <UInput
-                            v-model="userStore.userBlade.password"
+                            v-model="user.password"
                             type="password"
                             @input="passwordChanged = true"
                             class="w-100" />
@@ -82,16 +78,27 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from 'vue'
-import { useUserStore } from '../stores/user.js'
-import { addSuccessfulToast } from '../utils.js'
-import AvatarSelector from './AvatarSelector.vue'
+import { ref, toRaw } from 'vue'
+import { useUserStore } from '../../stores/user.js'
+import AvatarSelector from '../AvatarSelector.vue'
 
 const userStore = useUserStore()
 
+const props = defineProps({
+    open: Boolean,
+    initVal: Object,
+    mode: {
+        type: String,
+        default: 'create'
+    }
+})
+
+const emit = defineEmits(['submit', 'cancel', 'close'])
+
+const user = ref(props.initVal)
 const passwordChanged = ref(false)
 
-function validate(state) {
+const validate = state => {
     const errors = []
     if (!state.email) {
         errors.push({ name: 'email', message: 'Required' })
@@ -109,37 +116,9 @@ function validate(state) {
 }
 
 const onSubmit = async () => {
-    userStore.userBladeOpen = false
-    try {
-        if (userStore.userBladeMode === 'create') {
-            const user = {
-                ...userStore.userBlade
-            }
-            if (await userStore.createUser(user)) {
-                addSuccessfulToast('Created successfully')
-            }
-        }
-
-        if (userStore.userBladeMode === 'update') {
-            const user = {
-                ...userStore.userBlade
-            }
-            if (!passwordChanged.value) {
-                delete user.password
-            }
-            if (await userStore.updateUser(user)) {
-                addSuccessfulToast('Updated successfully')
-            }
-        }
-    } finally {
-        await userStore.refresh()
-        userStore.userBladeOpen = false
-    }
+    emit('submit', {
+        user: toRaw(user.value),
+        passwordChanged: passwordChanged.value
+    })
 }
-
-watchEffect(() => {
-    if (userStore.userBladeOpen) {
-        passwordChanged.value = false
-    }
-})
 </script>

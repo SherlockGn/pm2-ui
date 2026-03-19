@@ -1,4 +1,4 @@
-import { createApp, ref } from 'vue'
+import { render, h, ref, toRaw } from 'vue'
 import TerminalResultBlade from './components/TerminalResultBlade.vue'
 
 export const formatDate = date => {
@@ -88,30 +88,103 @@ export const getStatusColor = status => {
     return 'neutral'
 }
 
+let _context = null
+
+export const MyComponentsPlugin = {
+    install(app) {
+        _context = app._context
+    }
+}
+
+export const createCommonBlade = async (component, options) => {
+    const {
+        initVal = null,
+        props = {},
+        subscribedEvents = ['submit', 'cancel']
+    } = options
+    const container = document.createElement('div')
+    const destroy = () => {
+        render(null, container)
+        container.remove()
+    }
+
+    let resolvePromise
+    const promise = new Promise(resolve => {
+        resolvePromise = resolve
+    })
+
+    const open = ref(true)
+    const componentInstance = {
+        setup() {
+            return () => {
+                const finalProps = {
+                    initVal: toRaw(initVal),
+                    open: open.value,
+                    ...props,
+                    'onUpdate:open': value => {
+                        open.value = value
+                    },
+                    onClose: () => {
+                        destroy()
+                    }
+                }
+                subscribedEvents.forEach(event => {
+                    finalProps[`on${event[0].toUpperCase()}${event.slice(1)}`] =
+                        data => {
+                            open.value = false
+                            resolvePromise({ event, data: toRaw(data) })
+                        }
+                })
+                return h(component, finalProps)
+            }
+        }
+    }
+
+    const vnode = h(componentInstance)
+    vnode.appContext = _context
+    render(vnode, container)
+    document.body.appendChild(container)
+
+    return promise
+}
+
 export const createTerminalResultBlade = options => {
     const { title, value, autoRun, exec } = options
 
-    const modelValue = ref(true)
-    const app = createApp(TerminalResultBlade, {
-        modelValue,
-        title,
-        value,
-        autoRun,
-        exec,
-        'onUpdate:modelValue': value => {
-            modelValue.value = value
-        },
-        onClose: () => {
-            destroy()
-        }
-    })
-
-    const div = document.createElement('div')
-    document.body.appendChild(div)
-    app.mount(div)
+    const container = document.createElement('div')
 
     const destroy = () => {
-        app.unmount()
-        div.remove()
+        render(null, container)
+        container.remove()
     }
+
+    const modelValue = ref(true)
+
+    const componentInstance = {
+        setup() {
+            return () =>
+                h(TerminalResultBlade, {
+                    modelValue: modelValue.value,
+                    title,
+                    value,
+                    autoRun,
+                    exec,
+                    'onUpdate:modelValue': value => {
+                        modelValue.value = value
+                    },
+                    onClose: () => {
+                        destroy()
+                    }
+                })
+        }
+    }
+
+    const vnode = h(componentInstance)
+    vnode.appContext = _context
+
+    render(vnode, container)
+
+    document.body.appendChild(container)
+
+    return { destroy }
 }

@@ -113,8 +113,9 @@ import { onMounted, useTemplateRef } from 'vue'
 import { useClipboard } from '@vueuse/core'
 
 import { useUserStore } from '../stores/user.js'
-import { formatDate, addSuccessfulToast } from '../utils.js'
+import { formatDate, addSuccessfulToast, createCommonBlade } from '../utils.js'
 
+import UserBlade from './Blades/UserBlade.vue'
 import SortableTableHeader from './SortableTableHeader.vue'
 import TableCommonAction from './TableCommonAction.vue'
 import TableFilterResult from './TableFilterResult.vue'
@@ -222,8 +223,20 @@ const getActions = row => {
             label: 'Edit item',
             icon: 'i-lucide-edit-2',
             async onSelect() {
-                userStore.setUserForUpdate(row.original)
-                userStore.userBladeOpen = true
+                const { event, data } = await createCommonBlade(UserBlade, {
+                    initVal: { ...row.original, password: '******' },
+                    props: { mode: 'update' }
+                })
+                if (event === 'cancel') {
+                    return
+                }
+                if (!data.passwordChanged) {
+                    delete data.user.password
+                }
+                if (await userStore.updateUser(data.user)) {
+                    addSuccessfulToast('Updated successfully!')
+                    await userStore.refresh()
+                }
             }
         }
     ]

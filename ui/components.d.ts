@@ -11,7 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AppBlade: typeof import('./src/components/AppBlade.vue')['default']
+    AppBlade: typeof import('./src/components/Blades/AppBlade.vue')['default']
     AppGroupProps: typeof import('./src/components/AppGroupProps.vue')['default']
     AvatarSelector: typeof import('./src/components/AvatarSelector.vue')['default']
     BackupBlade: typeof import('./src/components/BackupBlade.vue')['default']
@@ -73,7 +73,7 @@ declare module 'vue' {
     UProgress: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Progress.vue')['default']
     USelect: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Select.vue')['default']
     USelectMenu: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/SelectMenu.vue')['default']
-    UserBlade: typeof import('./src/components/UserBlade.vue')['default']
+    UserBlade: typeof import('./src/components/Blades/UserBlade.vue')['default']
     UserList: typeof import('./src/components/UserList.vue')['default']
     UserMenu: typeof import('./src/components/UserMenu.vue')['default']
     USwitch: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Switch.vue')['default']

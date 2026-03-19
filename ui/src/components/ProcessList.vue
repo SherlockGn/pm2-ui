@@ -184,13 +184,15 @@ import {
     toFriendlyPeriod,
     addSuccessfulToast,
     toFriendlyMemory,
-    getStatusColor
+    getStatusColor,
+    createCommonBlade
 } from '../utils.js'
 
 import SortableTableHeader from './SortableTableHeader.vue'
 import TableCommonAction from './TableCommonAction.vue'
 import TableFilterResult from './TableFilterResult.vue'
 import FullHeight from './FullHeight.vue'
+import AppBlade from './Blades/AppBlade.vue'
 
 const userStore = useUserStore()
 const appStore = useAppStore()
@@ -336,9 +338,24 @@ const getActions = row => {
             label: 'Edit configurations',
             icon: 'i-lucide-edit',
             async onSelect() {
-                appStore.setAppForUpdate(row.original.app)
-                appStore.appBladeOpen = true
-                processStore.activeProcess = row.original
+                const { event, data } = await createCommonBlade(AppBlade, {
+                    initVal: appStore.toUIObjectApp(row.original.app),
+                    props: {
+                        mode: 'update'
+                    }
+                })
+                if (event === 'cancel') {
+                    return
+                }
+                if (
+                    await processStore.update(
+                        row.original.pmId,
+                        appStore.fromUIObjectApp(data)
+                    )
+                ) {
+                    addSuccessfulToast('Updated successfully!')
+                    processStore.refresh()
+                }
             },
             enabled: row.original.app != null
         },
@@ -367,8 +384,7 @@ const getActions = row => {
             label: 'Copy configuration as JSON',
             icon: 'i-lucide-copy',
             async onSelect() {
-                appStore.setAppForUpdate(row.original.app)
-                copy(appStore.getCurrentAppJson())
+                copy(appStore.toJsonObjectApp(row.original.app))
                 addSuccessfulToast('Copied successfully!')
             },
             enabled: row.original.app != null

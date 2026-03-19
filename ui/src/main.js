@@ -9,6 +9,8 @@ import { router } from './router.js'
 import './style.css'
 import App from './App.vue'
 
+import { MyComponentsPlugin } from './utils.js'
+
 addCollection(lucide)
 addCollection(streamlineStickiesColor)
 
@@ -17,5 +19,6 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(nuxtUi)
+app.use(MyComponentsPlugin)
 
 app.mount('#app')

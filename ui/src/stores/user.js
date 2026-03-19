@@ -7,8 +7,6 @@ export const useUserStore = defineStore('user', () => {
     const currentUser = ref(null)
     const users = ref([])
 
-    const userBladeOpen = ref(false)
-
     const login = async (email, password) => {
         const response = await request.post('user/login', null, {
             auth: {
@@ -60,32 +58,12 @@ export const useUserStore = defineStore('user', () => {
         return !!(await request.delete(`user/${id}`))
     }
 
-    const userBladeMode = ref('create')
-
-    const userBlade = ref({
-        email: '',
-        avatar: 'streamline-stickies-color:baby',
-        password: '',
-        displayName: '',
-        enabled: true,
-        superUser: false
-    })
-
-    const setUserForUpdate = user => {
-        userBladeMode.value = 'update'
-        userBlade.value = {
-            ...user,
-            password: '******'
-        }
-    }
-
     const createUser = async user => {
         return !!(await request.post('user', user))
     }
 
-    const setUserForCreate = () => {
-        userBladeMode.value = 'create'
-        userBlade.value = {
+    const getDefault = () => {
+        return {
             email: '',
             avatar: 'streamline-stickies-color:baby',
             password: '',
@@ -105,10 +83,6 @@ export const useUserStore = defineStore('user', () => {
         updateUser,
         updateEnabled,
         updateSuperUser,
-        userBladeOpen,
-        userBladeMode,
-        userBlade,
-        setUserForUpdate,
-        setUserForCreate
+        getDefault
     }
 })

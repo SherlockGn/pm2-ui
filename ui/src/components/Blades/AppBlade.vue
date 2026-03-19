@@ -4,12 +4,14 @@
         direction="right"
         :handle="false"
         :dismissible="true"
-        v-model:open="appStore.appBladeOpen">
+        :open="props.open"
+        @update:open="e => e || emit('cancel')"
+        @animationEnd="e => e || emit('close')">
         <template #body>
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
                 <h2 class="text-highlighted font-semibold">
                     {{
-                        appStore.appBladeMode === 'create'
+                        props.mode === 'create'
                             ? 'Create process'
                             : 'Update process configuration'
                     }}
@@ -19,12 +21,12 @@
                     color="neutral"
                     variant="ghost"
                     icon="i-lucide-x"
-                    @click="appStore.appBladeOpen = false" />
+                    @click="emit('cancel')" />
             </div>
             <div class="w-250 p-2">
                 <UForm
                     :validate="validate"
-                    :state="appStore.appBlade"
+                    :state="app"
                     class="space-y-4 flex flex-col h-[80vh]"
                     @submit="onSubmit">
                     <FullHeight :adjust-height="10">
@@ -32,6 +34,7 @@
                             <UTabs variant="link" :items="tabs" class="w-full">
                                 <template v-for="tab in tabs" v-slot:[tab.slot]>
                                     <AppGroupProps
+                                        :app="app"
                                         :group="tab.slot"></AppGroupProps>
                                 </template>
                             </UTabs>
@@ -40,14 +43,14 @@
                             <div>
                                 <UButton type="submit" class="mt-5">
                                     {{
-                                        appStore.appBladeMode === 'create'
+                                        props.mode === 'create'
                                             ? 'Create and Run'
                                             : 'Update'
                                     }}
                                 </UButton>
                                 <UButton
                                     @click.prevent="createOnly"
-                                    v-if="appStore.appBladeMode === 'create'"
+                                    v-if="props.mode === 'create'"
                                     variant="outline"
                                     class="mt-5 ml-3">
                                     Create
@@ -63,16 +66,23 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useAppStore } from '../stores/app.js'
-import { useProcessStore } from '../stores/process.js'
-import { addSuccessfulToast } from '../utils.js'
-import FullHeight from './FullHeight.vue'
-import AppGroupProps from './AppGroupProps.vue'
+import FullHeight from '../FullHeight.vue'
+import AppGroupProps from '../AppGroupProps.vue'
 
-import { allGroups } from '../../../parameters.js'
+import { allGroups } from '../../../../parameters.js'
 
-const appStore = useAppStore()
-const processStore = useProcessStore()
+const props = defineProps({
+    open: Boolean,
+    initVal: Object,
+    mode: {
+        type: String,
+        default: 'create'
+    }
+})
+
+const emit = defineEmits(['submit', 'close', 'cancel', 'createOnly'])
+
+const app = ref(props.initVal)
 
 const tabs = ref(
     allGroups().map(g => {
@@ -96,46 +106,32 @@ function validate(state) {
 }
 
 const createOnly = async () => {
-    if (!appStore.appBlade.name) {
-        appStore.appBlade.name = '[Name not specified]'
+    if (!app.value.name) {
+        app.value.name = '[Name not specified]'
     }
-    if (!appStore.appBlade.script) {
-        appStore.appBlade.script = '[Script not specified]'
+    if (!app.value.script) {
+        app.value.script = '[Script not specified]'
     }
-    try {
-        if (await processStore.create(appStore.getCurrentApp(), false)) {
-            processStore.refresh()
-            addSuccessfulToast('Created successfully')
-        }
-    } finally {
-        appStore.appBladeOpen = false
-    }
+    emit('createOnly', app.value)
 }
 
 const onSubmit = async () => {
-    appStore.appBladeOpen = false
-    try {
-        if (appStore.appBladeMode === 'create') {
-            if (await processStore.create(appStore.getCurrentApp(), true)) {
-                processStore.refresh()
-                addSuccessfulToast('Created successfully')
-            }
-        }
+    emit('submit', app.value)
 
-        if (appStore.appBladeMode === 'update') {
-            if (
-                await processStore.update(
-                    processStore.activeProcess.pmId,
-                    appStore.getCurrentApp()
-                )
-            ) {
-                processStore.refresh()
-                addSuccessfulToast('Updated successfully')
-            }
-        }
-    } finally {
-        processStore.refresh()
-        appStore.appBladeOpen = false
-    }
+    //     if (appStore.appBladeMode === 'update') {
+    //         if (
+    //             await processStore.update(
+    //                 processStore.activeProcess.pmId,
+    //                 appStore.getCurrentApp()
+    //             )
+    //         ) {
+    //             processStore.refresh()
+    //             addSuccessfulToast('Updated successfully')
+    //         }
+    //     }
+    // } finally {
+    //     processStore.refresh()
+    //     appStore.appBladeOpen = false
+    // }
 }
 </script>

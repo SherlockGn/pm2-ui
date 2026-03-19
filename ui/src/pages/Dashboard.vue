@@ -68,8 +68,6 @@
             </template>
         </UDashboardPanel>
     </UDashboardGroup>
-    <UserBlade></UserBlade>
-    <AppBlade></AppBlade>
     <DescriptionBlade></DescriptionBlade>
     <SendSignalBlade></SendSignalBlade>
     <SendRpcBlade></SendRpcBlade>
@@ -88,12 +86,13 @@ import UserMenu from '../components/UserMenu.vue'
 
 import { useUserStore } from '../stores/user.js'
 import { useAppStore } from '../stores/app.js'
+import { useProcessStore } from '../stores/process.js'
 import { useFsStore } from '../stores/fs.js'
 import { useDeploymentStore } from '../stores/deployment.js'
 import { useKvStore } from '../stores/kv.js'
 
-import UserBlade from '../components/UserBlade.vue'
-import AppBlade from '../components/AppBlade.vue'
+import UserBlade from '../components/Blades/UserBlade.vue'
+import AppBlade from '../components/Blades/AppBlade.vue'
 import DescriptionBlade from '../components/DescriptionBlade.vue'
 import SendSignalBlade from '../components/SendSignalBlade.vue'
 import SendRpcBlade from '../components/SendRpcBlade.vue'
@@ -103,9 +102,12 @@ import DeploymentBlade from '../components/DeploymentBlade.vue'
 import BackupBlade from '../components/BackupBlade.vue'
 import BackupBladeDownloadBlade from '../components/BackupBladeDownloadBlade.vue'
 
+import { createCommonBlade, addSuccessfulToast } from '../utils.js'
+
 const route = useRoute()
 const userStore = useUserStore()
 const appStore = useAppStore()
+const processStore = useProcessStore()
 const deploymentStore = useDeploymentStore()
 const fsStore = useFsStore()
 const kvStore = useKvStore()
@@ -206,14 +208,34 @@ const navigators = [
     }
 ]
 
-const add = () => {
+const add = async () => {
     if (route.name === 'user') {
-        userStore.setUserForCreate()
-        userStore.userBladeOpen = true
+        const { event, data } = await createCommonBlade(UserBlade, {
+            initVal: userStore.getDefault()
+        })
+        if (event === 'cancel') {
+            return
+        }
+        if (await userStore.createUser(data.user)) {
+            addSuccessfulToast('Created successfully')
+            await userStore.refresh()
+        }
     }
     if (route.name === 'management') {
-        appStore.setAppForCreate()
-        appStore.appBladeOpen = true
+        const { event, data } = await createCommonBlade(AppBlade, {
+            initVal: appStore.getDefaultUIApp(),
+            subscribedEvents: ['cancel', 'submit', 'createOnly']
+        })
+        if (event === 'cancel') {
+            return
+        }
+        const willStart = event === 'submit'
+        if (
+            await processStore.create(appStore.fromUIObjectApp(data), willStart)
+        ) {
+            addSuccessfulToast('Created successfully!')
+            processStore.refresh()
+        }
     }
     if (route.name === 'deployment') {
         deploymentStore.setForCreate()
