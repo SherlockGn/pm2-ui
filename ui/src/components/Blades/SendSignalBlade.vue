@@ -4,7 +4,9 @@
         direction="right"
         :handle="false"
         :dismissible="true"
-        v-model:open="communicationStore.sendSignalBladeOpen">
+        :open="props.open"
+        @update:open="e => e || emit('cancel')"
+        @animationEnd="e => e || emit('close')">
         <template #body>
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
                 <h2 class="text-highlighted font-semibold">Send signal</h2>
@@ -36,12 +38,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useCommunicationStore } from '../stores/communication.js'
-import { useProcessStore } from '../stores/process.js'
-import { addSuccessfulToast } from '../utils.js'
 
-const communicationStore = useCommunicationStore()
-const processStore = useProcessStore()
+const props = defineProps({
+    open: Boolean
+})
+
+const emit = defineEmits(['submit', 'cancel', 'close'])
+
 const signal = ref('SIGINT')
 
 const allSignals = [
@@ -85,17 +88,6 @@ const allSignals = [
 ]
 
 const onSubmit = async () => {
-    try {
-        if (
-            await communicationStore.sendSignal(
-                processStore.activeProcess.pmId,
-                signal.value
-            )
-        ) {
-            addSuccessfulToast('Sent successfully!')
-        }
-    } finally {
-        communicationStore.sendSignalBladeOpen = false
-    }
+    emit('submit', signal.value)
 }
 </script>

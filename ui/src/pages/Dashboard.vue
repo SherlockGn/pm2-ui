@@ -68,10 +68,6 @@
             </template>
         </UDashboardPanel>
     </UDashboardGroup>
-    <SendSignalBlade></SendSignalBlade>
-    <SendRpcBlade></SendRpcBlade>
-    <SendDataBlade></SendDataBlade>
-    <ViewDataBlade></ViewDataBlade>
     <DeploymentBlade></DeploymentBlade>
     <BackupBlade></BackupBlade>
     <BackupBladeDownloadBlade></BackupBladeDownloadBlade>
@@ -92,10 +88,6 @@ import { useKvStore } from '../stores/kv.js'
 
 import UserBlade from '../components/Blades/UserBlade.vue'
 import AppBlade from '../components/Blades/AppBlade.vue'
-import SendSignalBlade from '../components/SendSignalBlade.vue'
-import SendRpcBlade from '../components/SendRpcBlade.vue'
-import SendDataBlade from '../components/SendDataBlade.vue'
-import ViewDataBlade from '../components/ViewDataBlade.vue'
 import DeploymentBlade from '../components/DeploymentBlade.vue'
 import BackupBlade from '../components/BackupBlade.vue'
 import BackupBladeDownloadBlade from '../components/BackupBladeDownloadBlade.vue'

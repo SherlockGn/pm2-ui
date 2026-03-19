@@ -84,27 +84,26 @@
         @update:page="refreshData"
         v-model:page="currentPage"
         :total="communicationStore.count" />
-
-    <!-- <SendSignalBlade /> -->
 </template>
 
 <script setup>
 import { ref, useTemplateRef, nextTick, watch } from 'vue'
-import JSON5 from 'json5'
 import { useCommunicationStore } from '../stores/communication.js'
 import { useUserStore } from '../stores/user.js'
-import { useProcessStore } from '../stores/process.js'
-import { addSuccessfulToast, formatDate } from '../utils.js'
+import { addSuccessfulToast, createCommonBlade, formatDate } from '../utils.js'
 import { useDebounceFn } from '@vueuse/core'
 
 import ProcessSelector from '../components/ProcessSelector.vue'
 import TableCommonAction from '../components/TableCommonAction.vue'
+import SendSignalBlade from '../components/Blades/SendSignalBlade.vue'
+import SendRpcBlade from '../components/Blades/SendRpcBlade.vue'
+import SendDataBlade from '../components/Blades/SendDataBlade.vue'
+import ViewDataBlade from '../components/Blades/ViewDataBlade.vue'
 
 const selected = ref(null)
 
 const communicationStore = useCommunicationStore()
 const userStore = useUserStore()
-const processStore = useProcessStore()
 
 const refreshData = async () => {
     await nextTick()
@@ -177,8 +176,9 @@ const getActions = row => {
             label: 'View data',
             icon: 'i-lucide-view',
             async onSelect() {
-                communicationStore.activeCommunication = row.original
-                communicationStore.viewDataBladeOpen = true
+                await createCommonBlade(ViewDataBlade, {
+                    initVal: row.original
+                })
             }
         }
     ]
@@ -211,24 +211,52 @@ const sendActions = ref([
         label: 'Send Signal',
         icon: 'i-lucide-signal',
         async onSelect() {
-            processStore.activeProcess = selected.value
-            communicationStore.sendSignalBladeOpen = true
+            const { event, data } = await createCommonBlade(SendSignalBlade)
+            if (event === 'cancel') {
+                return
+            }
+            if (
+                await communicationStore.sendSignal(selected.value.pmId, data)
+            ) {
+                addSuccessfulToast('Sent successfully!')
+                await refreshData()
+            }
         }
     },
     {
         label: 'RPC',
         icon: 'i-lucide-phone-outgoing',
         async onSelect() {
-            processStore.activeProcess = selected.value
-            communicationStore.sendRpcBladeOpen = true
+            const { event, data } = await createCommonBlade(SendRpcBlade, {
+                initVal: selected.value
+            })
+            if (event === 'cancel') {
+                return
+            }
+            if (
+                await communicationStore.sendRpc(
+                    selected.value.pmId,
+                    data.rpcName,
+                    data.content
+                )
+            ) {
+                addSuccessfulToast('Sent successfully!')
+                await refreshData()
+            }
         }
     },
     {
         label: 'Send Data',
         icon: 'i-lucide-package',
         async onSelect() {
-            processStore.activeProcess = selected.value
-            communicationStore.sendDataBladeOpen = true
+            const { event, data } = await createCommonBlade(SendDataBlade)
+            if (event === 'cancel') {
+                return
+            }
+            if (await communicationStore.sendData(selected.value.pmId, data)) {
+                addSuccessfulToast('Sent successfully!')
+                await refreshData()
+            }
         }
     }
 ])
@@ -238,28 +266,4 @@ const getTypeName = type => {
 }
 
 const table = useTemplateRef('table')
-
-watch([() => communicationStore.sendSignalBladeOpen], async () => {
-    if (!communicationStore.sendSignalBladeOpen) {
-        await refreshData()
-    }
-})
-
-watch([() => communicationStore.sendRpcBladeOpen], async () => {
-    if (!communicationStore.sendRpcBladeOpen) {
-        await refreshData()
-    }
-})
-
-watch([() => communicationStore.sendDataBladeOpen], async () => {
-    if (!communicationStore.sendDataBladeOpen) {
-        await refreshData()
-    }
-})
-
-watch([() => selected.value], async () => {
-    if (!communicationStore.sendDataBladeOpen) {
-        await refreshData()
-    }
-})
 </script>

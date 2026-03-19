@@ -4,7 +4,9 @@
         direction="right"
         :handle="false"
         :dismissible="true"
-        v-model:open="communicationStore.sendRpcBladeOpen">
+        :open="props.open"
+        @update:open="e => e || emit('cancel')"
+        @animationEnd="e => e || emit('close')">
         <template #body>
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
                 <h2 class="text-highlighted font-semibold">
@@ -14,7 +16,7 @@
                     color="neutral"
                     variant="ghost"
                     icon="i-lucide-x"
-                    @click="communicationStore.sendRpcBladeOpen = false" />
+                    @click="emit('cancel')" />
             </div>
             <div class="w-200 p-2">
                 <UForm
@@ -41,17 +43,19 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { useCommunicationStore } from '../stores/communication.js'
-import { useProcessStore } from '../stores/process.js'
-import { addSuccessfulToast } from '../utils.js'
-
 import JSON5 from 'json5'
 
-const communicationStore = useCommunicationStore()
-const processStore = useProcessStore()
+const props = defineProps({
+    open: Boolean,
+    initVal: Object
+})
+
+const emit = defineEmits(['submit', 'cancel', 'close'])
+
+const process = ref(props.initVal)
 
 const rpcNames = computed(() => {
-    return processStore.activeProcess?.rpc?.map(i => i.name) ?? []
+    return process.value.rpc.map(i => i.name)
 })
 
 const rpcName = ref(null)
@@ -59,8 +63,7 @@ const contentString = ref('')
 
 const hasParam = computed(() => {
     return (
-        processStore.activeProcess?.rpc?.find(i => i.name === rpcName.value)
-            ?.hasParam ?? false
+        process.value.rpc.find(i => i.name === rpcName.value)?.hasParam ?? false
     )
 })
 
@@ -76,20 +79,9 @@ const parseContent = content => {
 }
 
 const onSubmit = async () => {
-    try {
-        if (
-            await communicationStore.sendRpc(
-                processStore.activeProcess.pmId,
-                rpcName.value,
-                hasParam.value ? parseContent(contentString.value) : null
-            )
-        ) {
-            addSuccessfulToast('Sent successfully!')
-        }
-    } finally {
-        communicationStore.sendRpcBladeOpen = false
-        contentString.value = ''
-        rpcName.value = null
-    }
+    emit('submit', {
+        rpcName: rpcName.value,
+        content: hasParam.value ? parseContent(contentString.value) : null
+    })
 }
 </script>

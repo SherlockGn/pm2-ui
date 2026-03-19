@@ -96,7 +96,7 @@ export const MyComponentsPlugin = {
     }
 }
 
-export const createCommonBlade = async (component, options) => {
+export const createCommonBlade = async (component, options = {}) => {
     const {
         initVal = null,
         props = {},

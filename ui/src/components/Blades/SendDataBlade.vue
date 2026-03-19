@@ -4,17 +4,17 @@
         direction="right"
         :handle="false"
         :dismissible="true"
-        v-model:open="communicationStore.sendDataBladeOpen">
+        :open="props.open"
+        @update:open="e => e || emit('cancel')"
+        @animationEnd="e => e || emit('close')">
         <template #body>
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
-                <h2 class="text-highlighted font-semibold">
-                    Send data
-                </h2>
+                <h2 class="text-highlighted font-semibold">Send data</h2>
                 <UButton
                     color="neutral"
                     variant="ghost"
                     icon="i-lucide-x"
-                    @click="communicationStore.sendDataBladeOpen = false" />
+                    @click="emit('cancel')" />
             </div>
             <div class="w-200 p-2">
                 <UForm
@@ -35,14 +35,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useCommunicationStore } from '../stores/communication.js'
-import { useProcessStore } from '../stores/process.js'
-import { addSuccessfulToast } from '../utils.js'
-
 import JSON5 from 'json5'
 
-const communicationStore = useCommunicationStore()
-const processStore = useProcessStore()
+const props = defineProps({
+    open: Boolean
+})
+
+const emit = defineEmits(['submit', 'cancel', 'close'])
 
 const contentString = ref('')
 
@@ -58,18 +57,6 @@ const parseContent = content => {
 }
 
 const onSubmit = async () => {
-    try {
-        if (
-            await communicationStore.sendData(
-                processStore.activeProcess.pmId,
-                parseContent(contentString.value)
-            )
-        ) {
-            addSuccessfulToast('Sent successfully!')
-        }
-    } finally {
-        communicationStore.sendDataBladeOpen = false
-        contentString.value = ''
-    }
+    emit('submit', parseContent(contentString.value))
 }
 </script>
