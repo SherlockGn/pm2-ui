@@ -14,7 +14,7 @@
                     color="neutral"
                     variant="ghost"
                     icon="i-lucide-x"
-                    @click="communicationStore.sendSignalBladeOpen = false" />
+                    @click="emit('cancel')" />
             </div>
             <div class="w-200 p-2">
                 <UForm
