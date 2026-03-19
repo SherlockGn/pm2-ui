@@ -68,9 +68,6 @@ export const useProcessStore = defineStore('process', () => {
         )
     }
 
-    const activeProcess = ref(null)
-    const descriptionBladeOpen = ref(false)
-
     const getFileName = script => {
         return script.split(useFsStore().sep).pop()
     }
@@ -87,8 +84,6 @@ export const useProcessStore = defineStore('process', () => {
         reload,
         manage,
         deleteItem,
-        activeProcess,
-        descriptionBladeOpen,
         readLogs,
         getFileName
     }

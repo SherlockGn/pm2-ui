@@ -18,7 +18,7 @@ declare module 'vue' {
     BackupBladeDownloadBlade: typeof import('./src/components/BackupBladeDownloadBlade.vue')['default']
     DateTime: typeof import('./src/components/DateTime.vue')['default']
     DateTimePeriod: typeof import('./src/components/DateTimePeriod.vue')['default']
-    DeploymentBlade: typeof import('./src/components/DeploymentBlade.vue')['default']
+    DeploymentBlade: typeof import('./src/components/Blades/DeploymentBlade.vue')['default']
     DescriptionBlade: typeof import('./src/components/Blades/DescriptionBlade.vue')['default']
     EnvironmentProfiles: typeof import('./src/components/EnvironmentProfiles.vue')['default']
     FileSelector: typeof import('./src/components/FileSelector.vue')['default']

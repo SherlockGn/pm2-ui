@@ -1,14 +1,10 @@
 import { defineStore } from 'pinia'
 import { request } from './http.js'
 
-import { ref, toRaw } from 'vue'
+import { ref } from 'vue'
 
 export const useDeploymentStore = defineStore('deployment', () => {
     const deployments = ref([])
-    const activeDeployment = ref(null)
-
-    const deploymentBladeOpen = ref(false)
-    const deploymentBladeMode = ref(false)
 
     const refresh = async () => {
         let data = (await request.get('deployment'))?.data
@@ -33,6 +29,24 @@ export const useDeploymentStore = defineStore('deployment', () => {
 
     const deleteItem = async id => {
         return !!(await request.delete(`deployment/${id}`))
+    }
+
+    const getDefault = () => {
+        return {
+            id: 0,
+            name: '',
+            key: '',
+            user: '',
+            host: [],
+            sshOptions: [],
+            ref: '',
+            repo: '',
+            path: '',
+            preSetup: '',
+            postSetup: '',
+            preDeployLocal: '',
+            postDeploy: ''
+        }
     }
 
     const toViewObject = deployment => {
@@ -71,33 +85,7 @@ export const useDeploymentStore = defineStore('deployment', () => {
             postDeploy: data.postDeploy === '' ? null : data.postDeploy
         }
     }
-
-    const setForCreate = () => {
-        activeDeployment.value = {
-            id: 0,
-            name: '',
-            key: '',
-            user: '',
-            host: [],
-            sshOptions: [],
-            ref: '',
-            repo: '',
-            path: '',
-            preSetup: '',
-            postSetup: '',
-            preDeployLocal: '',
-            postDeploy: ''
-        }
-        deploymentBladeMode.value = 'create'
-    }
-
-    const setForUpdate = deployment => {
-        activeDeployment.value = toViewObject(toRaw(deployment))
-        deploymentBladeMode.value = 'update'
-    }
-
-    const getCurrentJson = () => {
-        const deployment = fromViewObject(activeDeployment.value)
+    const getJson = deployment => {
         const jsonObject = {
             key: deployment.key,
             user: deployment.user,
@@ -118,7 +106,9 @@ export const useDeploymentStore = defineStore('deployment', () => {
                 delete jsonObject[key]
             }
         }
-        return jsonObject
+        return JSON.stringify({
+            [deployment.name]: jsonObject
+        })
     }
 
     const setup = async id => {
@@ -155,16 +145,13 @@ export const useDeploymentStore = defineStore('deployment', () => {
 
     return {
         deployments,
-        activeDeployment,
-        deploymentBladeOpen,
-        deploymentBladeMode,
         refresh,
         create,
         update,
         deleteItem,
-        setForCreate,
-        setForUpdate,
-        getCurrentJson,
+        getJson,
+        getDefault,
+        fromViewObject,
         toViewObject,
         setup,
         deploy,

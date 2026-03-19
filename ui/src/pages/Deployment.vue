@@ -94,13 +94,15 @@ import { useDeploymentStore } from '../stores/deployment.js'
 import {
     formatDate,
     addSuccessfulToast,
-    createTerminalResultBlade
+    createTerminalResultBlade,
+    createCommonBlade
 } from '../utils.js'
 
 import SortableTableHeader from '../components/SortableTableHeader.vue'
 import TableCommonAction from '../components/TableCommonAction.vue'
 import TableFilterResult from '../components/TableFilterResult.vue'
 import FullHeight from '../components/FullHeight.vue'
+import DeploymentBlade from '../components/Blades/DeploymentBlade.vue'
 
 const userStore = useUserStore()
 const deploymentStore = useDeploymentStore()
@@ -167,10 +169,7 @@ const getActions = row => {
             label: 'Copy raw JSON',
             icon: 'i-lucide-copy',
             onSelect() {
-                deploymentStore.activeDeployment = deploymentStore.toViewObject(
-                    row.original
-                )
-                copy(JSON.stringify(deploymentStore.getCurrentJson()))
+                copy(deploymentStore.getJson(row.original))
                 addSuccessfulToast('Copied successfully!')
             }
         },
@@ -188,8 +187,26 @@ const getActions = row => {
             label: 'Edit item',
             icon: 'i-lucide-edit-2',
             async onSelect() {
-                deploymentStore.setForUpdate(row.original)
-                deploymentStore.deploymentBladeOpen = true
+                const { event, data } = await createCommonBlade(
+                    DeploymentBlade,
+                    {
+                        initVal: deploymentStore.toViewObject(row.original),
+                        props: {
+                            mode: 'update'
+                        }
+                    }
+                )
+                if (event === 'cancel') {
+                    return
+                }
+                if (
+                    await deploymentStore.update(
+                        deploymentStore.fromViewObject(data)
+                    )
+                ) {
+                    addSuccessfulToast('Updated successfully')
+                    deploymentStore.refresh()
+                }
             }
         },
         {

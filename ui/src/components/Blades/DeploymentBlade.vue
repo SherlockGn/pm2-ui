@@ -4,12 +4,14 @@
         direction="right"
         :handle="false"
         :dismissible="true"
-        v-model:open="deploymentStore.deploymentBladeOpen">
+        :open="props.open"
+        @update:open="e => e || emit('cancel')"
+        @animationEnd="e => e || emit('close')">
         <template #body>
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
                 <h2 class="text-highlighted font-semibold">
                     {{
-                        deploymentStore.deploymentBladeMode === 'create'
+                        props.mode === 'create'
                             ? 'Create deployment'
                             : 'Update deployment'
                     }}
@@ -19,19 +21,17 @@
                     color="neutral"
                     variant="ghost"
                     icon="i-lucide-x"
-                    @click="deploymentStore.deploymentBladeOpen = false" />
+                    @click="emit('cancel')" />
             </div>
             <div class="w-200 p-2">
                 <UForm
                     :validate="validate"
-                    :state="deploymentStore.activeDeployment"
+                    :state="deployment"
                     class="space-y-4 flex flex-col h-[85vh]"
                     @submit="onSubmit">
                     <div class="h-[calc(100vh-5rem)] overflow-y-auto">
                         <UFormField label="Name" name="name" class="mb-5">
-                            <UInput
-                                v-model="deploymentStore.activeDeployment.name"
-                                class="w-100" />
+                            <UInput v-model="deployment.name" class="w-100" />
                         </UFormField>
 
                         <UFormField
@@ -39,9 +39,7 @@
                             description="SSH key path"
                             name="key"
                             class="mb-5">
-                            <UInput
-                                v-model="deploymentStore.activeDeployment.key"
-                                class="w-100" />
+                            <UInput v-model="deployment.key" class="w-100" />
                         </UFormField>
 
                         <UFormField
@@ -49,9 +47,7 @@
                             description="SSH user"
                             name="user"
                             class="mb-5">
-                            <UInput
-                                v-model="deploymentStore.activeDeployment.user"
-                                class="w-100" />
+                            <UInput v-model="deployment.user" class="w-100" />
                         </UFormField>
 
                         <UFormField
@@ -60,7 +56,7 @@
                             name="host"
                             class="mb-5">
                             <StringList
-                                v-model="deploymentStore.activeDeployment.host"
+                                v-model="deployment.host"
                                 class="w-100" />
                         </UFormField>
 
@@ -70,9 +66,7 @@
                             name="sshOptions"
                             class="mb-5">
                             <StringList
-                                v-model="
-                                    deploymentStore.activeDeployment.sshOptions
-                                "
+                                v-model="deployment.sshOptions"
                                 class="w-100" />
                         </UFormField>
 
@@ -81,9 +75,7 @@
                             description="GIT remote/branch"
                             name="ref"
                             class="mb-5">
-                            <UInput
-                                v-model="deploymentStore.activeDeployment.ref"
-                                class="w-100" />
+                            <UInput v-model="deployment.ref" class="w-100" />
                         </UFormField>
 
                         <UFormField
@@ -91,9 +83,7 @@
                             description="GIT remote"
                             name="repo"
                             class="mb-5">
-                            <UInput
-                                v-model="deploymentStore.activeDeployment.repo"
-                                class="w-100" />
+                            <UInput v-model="deployment.repo" class="w-100" />
                         </UFormField>
 
                         <UFormField
@@ -101,9 +91,7 @@
                             description="path in the server"
                             name="path"
                             class="mb-5">
-                            <UInput
-                                v-model="deploymentStore.activeDeployment.path"
-                                class="w-100" />
+                            <UInput v-model="deployment.path" class="w-100" />
                         </UFormField>
 
                         <UFormField
@@ -112,9 +100,7 @@
                             name="preSetup"
                             class="mb-5">
                             <UInput
-                                v-model="
-                                    deploymentStore.activeDeployment.preSetup
-                                "
+                                v-model="deployment.preSetup"
                                 class="w-100" />
                         </UFormField>
 
@@ -124,9 +110,7 @@
                             name="postSetup"
                             class="mb-5">
                             <UInput
-                                v-model="
-                                    deploymentStore.activeDeployment.postSetup
-                                "
+                                v-model="deployment.postSetup"
                                 class="w-100" />
                         </UFormField>
 
@@ -136,10 +120,7 @@
                             name="preDeployLocal"
                             class="mb-5">
                             <UInput
-                                v-model="
-                                    deploymentStore.activeDeployment
-                                        .preDeployLocal
-                                "
+                                v-model="deployment.preDeployLocal"
                                 class="w-100" />
                         </UFormField>
 
@@ -149,9 +130,7 @@
                             name="postDeploy"
                             class="mb-5">
                             <UInput
-                                v-model="
-                                    deploymentStore.activeDeployment.postDeploy
-                                "
+                                v-model="deployment.postDeploy"
                                 class="w-100" />
                         </UFormField>
                     </div>
@@ -165,12 +144,21 @@
 </template>
 
 <script setup>
-import { ref, toRaw, watchEffect } from 'vue'
-import { useDeploymentStore } from '../stores/deployment.js'
-import { addSuccessfulToast } from '../utils.js'
-import StringList from './StringList.vue'
+import { ref } from 'vue'
+import StringList from '../StringList.vue'
 
-const deploymentStore = useDeploymentStore()
+const props = defineProps({
+    open: Boolean,
+    initVal: Object,
+    mode: {
+        type: String,
+        default: 'create'
+    }
+})
+
+const emit = defineEmits(['submit', 'cancel', 'close'])
+
+const deployment = ref(props.initVal)
 
 function validate(state) {
     const errors = []
@@ -196,29 +184,6 @@ function validate(state) {
 }
 
 const onSubmit = async () => {
-    try {
-        if (deploymentStore.deploymentBladeMode === 'create') {
-            if (
-                await deploymentStore.create(
-                    toRaw(deploymentStore.activeDeployment)
-                )
-            ) {
-                addSuccessfulToast('Created successfully')
-            }
-        }
-
-        if (deploymentStore.deploymentBladeMode === 'update') {
-            if (
-                await deploymentStore.update(
-                    toRaw(deploymentStore.activeDeployment)
-                )
-            ) {
-                addSuccessfulToast('Updated successfully')
-            }
-        }
-    } finally {
-        await deploymentStore.refresh()
-        deploymentStore.deploymentBladeOpen = false
-    }
+    emit('submit', deployment.value)
 }
 </script>

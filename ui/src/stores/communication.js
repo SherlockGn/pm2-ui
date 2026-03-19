@@ -7,13 +7,6 @@ export const useCommunicationStore = defineStore('communication', () => {
     const communications = ref([])
     const count = ref(0)
 
-    const activeCommunication = ref(null)
-
-    const sendSignalBladeOpen = ref(false)
-    const sendDataBladeOpen = ref(false)
-    const sendRpcBladeOpen = ref(false)
-    const viewDataBladeOpen = ref(false)
-
     const refresh = async (pmId, typeList, namePattern, offset, limit) => {
         let data = (
             await request.post(`communication/query/${pmId}`, {
@@ -53,14 +46,9 @@ export const useCommunicationStore = defineStore('communication', () => {
     return {
         communications,
         count,
-        activeCommunication,
         refresh,
         sendSignal,
         sendData,
-        sendRpc,
-        sendSignalBladeOpen,
-        sendDataBladeOpen,
-        sendRpcBladeOpen,
-        viewDataBladeOpen
+        sendRpc
     }
 })

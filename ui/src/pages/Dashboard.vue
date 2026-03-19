@@ -68,7 +68,6 @@
             </template>
         </UDashboardPanel>
     </UDashboardGroup>
-    <DeploymentBlade></DeploymentBlade>
     <BackupBlade></BackupBlade>
     <BackupBladeDownloadBlade></BackupBladeDownloadBlade>
 </template>
@@ -88,7 +87,7 @@ import { useKvStore } from '../stores/kv.js'
 
 import UserBlade from '../components/Blades/UserBlade.vue'
 import AppBlade from '../components/Blades/AppBlade.vue'
-import DeploymentBlade from '../components/DeploymentBlade.vue'
+import DeploymentBlade from '../components/Blades/DeploymentBlade.vue'
 import BackupBlade from '../components/BackupBlade.vue'
 import BackupBladeDownloadBlade from '../components/BackupBladeDownloadBlade.vue'
 
@@ -228,8 +227,16 @@ const add = async () => {
         }
     }
     if (route.name === 'deployment') {
-        deploymentStore.setForCreate()
-        deploymentStore.deploymentBladeOpen = true
+        const { event, data } = await createCommonBlade(DeploymentBlade, {
+            initVal: deploymentStore.getDefault()
+        })
+        if (event === 'cancel') {
+            return
+        }
+        if (await deploymentStore.create(data)) {
+            addSuccessfulToast('Created successfully')
+            deploymentStore.refresh()
+        }
     }
 }
 </script>
