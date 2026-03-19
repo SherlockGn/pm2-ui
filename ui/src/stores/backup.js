@@ -63,11 +63,6 @@ export const useBackupStore = defineStore('backup', () => {
         return !!(await request.post(`backup/${id}/restore`))
     }
 
-    const active = ref(null)
-    const backupBladeOpen = ref(false)
-    const backupBladeMode = 'create'
-    const backupDownloadBladeOpen = ref(false)
-
     return {
         backups,
         refresh,
@@ -76,10 +71,6 @@ export const useBackupStore = defineStore('backup', () => {
         deleteItem,
         backupSnapshot,
         upload,
-        restore,
-        active,
-        backupBladeOpen,
-        backupBladeMode,
-        backupDownloadBladeOpen
+        restore
     }
 })

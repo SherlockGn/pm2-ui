@@ -68,8 +68,6 @@
             </template>
         </UDashboardPanel>
     </UDashboardGroup>
-    <BackupBlade></BackupBlade>
-    <BackupBladeDownloadBlade></BackupBladeDownloadBlade>
 </template>
 
 <script setup>
@@ -88,8 +86,6 @@ import { useKvStore } from '../stores/kv.js'
 import UserBlade from '../components/Blades/UserBlade.vue'
 import AppBlade from '../components/Blades/AppBlade.vue'
 import DeploymentBlade from '../components/Blades/DeploymentBlade.vue'
-import BackupBlade from '../components/BackupBlade.vue'
-import BackupBladeDownloadBlade from '../components/BackupBladeDownloadBlade.vue'
 
 import { createCommonBlade, addSuccessfulToast } from '../utils.js'
 

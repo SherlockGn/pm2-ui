@@ -119,11 +119,15 @@ import { useKvStore } from '../stores/kv.js'
 
 import FullHeight from '../components/FullHeight.vue'
 import TableCommonAction from '../components/TableCommonAction.vue'
+import BackupBlade from '../components/Blades/BackupBlade.vue'
+import backupDownloadBlade from '../components/Blades/BackupDownloadBlade.vue'
+
 import {
     formatDate,
     addSuccessfulToast,
     addErrorToast,
-    toFriendlyMemory
+    toFriendlyMemory,
+    createCommonBlade
 } from '../utils.js'
 
 import JSON5 from 'json5'
@@ -211,8 +215,16 @@ const getActions = row => {
             label: 'Download',
             icon: 'i-lucide-hard-drive-download',
             async onSelect() {
-                backupStore.active = row.original
-                backupStore.backupDownloadBladeOpen = true
+                const { event } = await createCommonBlade(
+                    backupDownloadBlade,
+                    {
+                        initVal: row.original
+                    }
+                )
+                if (event === 'cancel') {
+                    return
+                }
+                addSuccessfulToast('Downloaded successfully!')
             }
         },
         {
@@ -229,9 +241,19 @@ const getActions = row => {
             label: 'Edit',
             icon: 'i-lucide-edit',
             async onSelect() {
-                backupStore.backupBladeMode = 'update'
-                backupStore.active = row.original
-                backupStore.backupBladeOpen = true
+                const { event, data } = await createCommonBlade(BackupBlade, {
+                    initVal: { name: row.original.name },
+                    props: {
+                        mode: 'update'
+                    }
+                })
+                if (event === 'cancel') {
+                    return
+                }
+                if (await backupStore.update(row.original.id, data.name)) {
+                    addSuccessfulToast('Updated successfully!')
+                }
+                await backupStore.refresh()
             }
         },
         {
@@ -248,9 +270,17 @@ const getActions = row => {
 }
 
 const startBackup = async () => {
-    backupStore.backupBladeMode = 'create'
-    backupStore.active = { name: '' }
-    backupStore.backupBladeOpen = true
+    const { event, data } = await createCommonBlade(BackupBlade, {
+        initVal: { name: '' }
+    })
+    console.log(event, data)
+    if (event === 'cancel') {
+        return
+    }
+    if (await backupStore.backupSnapshot(data.name)) {
+        addSuccessfulToast('Created successfully!')
+        await backupStore.refresh()
+    }
 }
 
 const uploadFile = async () => {

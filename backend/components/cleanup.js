@@ -30,7 +30,7 @@ export const getExpiredCounts = async () => {
 export const cleanExpired = async () => {
     const existingIds = (await listProcesses()).map(process => process.id)
     const timestamp = Date.now() - getSettings().dbCleanUpEarlierThan
-    const limit = 100
+    const limit = 10000
 
     let adminLogs = 0
     let communications = 0

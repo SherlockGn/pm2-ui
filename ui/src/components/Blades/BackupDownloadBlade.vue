@@ -4,7 +4,9 @@
         direction="right"
         :handle="false"
         :dismissible="true"
-        v-model:open="backupStore.backupDownloadBladeOpen">
+        :open="props.open"
+        @update:open="e => e || emit('cancel')"
+        @animationEnd="e => e || emit('close')">
         <template #body>
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
                 <h2 class="text-highlighted font-semibold">Download file</h2>
@@ -12,7 +14,7 @@
                     color="neutral"
                     variant="ghost"
                     icon="i-lucide-x"
-                    @click="backupStore.backupDownloadBladeOpen = false" />
+                    @click="emit('cancel')" />
             </div>
             <div class="w-200 p-2">
                 <UForm
@@ -49,10 +51,18 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useBackupStore } from '../stores/backup.js'
-import { addSuccessfulToast } from '../utils.js'
+import { useBackupStore } from '../../stores/backup.js'
+
+const props = defineProps({
+    open: Boolean,
+    initVal: Object
+})
+
+const emit = defineEmits(['submit', 'cancel', 'close'])
 
 const backupStore = useBackupStore()
+
+const backup = ref(props.initVal)
 
 const includeApps = ref(true)
 const includeDeployments = ref(true)
@@ -81,35 +91,31 @@ const downloadTypes = [
 ]
 
 const onSubmit = async () => {
-    try {
-        const { text } = await backupStore.getDownloadText(
-            backupStore.active.id,
-            includeApps.value,
-            includeDeployments.value,
-            downloadType.value
-        )
-        if (text) {
-            let ext = 'json'
-            if (downloadType.value === 'cjs') {
-                ext = 'cjs'
-            }
-            if (downloadType.value === 'esm') {
-                ext = 'mjs'
-            }
-            const filename = `${fileName.value}.${ext}`
-            const blob = new Blob([text], { type: 'text/plain' })
-            const link = document.createElement('a')
-            link.href = URL.createObjectURL(blob)
-            link.download = filename
-            link.click()
-
-            setTimeout(() => {
-                link.remove()
-            }, 1000)
-            addSuccessfulToast('Downloaded successfully!')
+    const { text } = await backupStore.getDownloadText(
+        backup.value.id,
+        includeApps.value,
+        includeDeployments.value,
+        downloadType.value
+    )
+    if (text) {
+        let ext = 'json'
+        if (downloadType.value === 'cjs') {
+            ext = 'cjs'
         }
-    } finally {
-        backupStore.backupDownloadBladeOpen = false
+        if (downloadType.value === 'esm') {
+            ext = 'mjs'
+        }
+        const filename = `${fileName.value}.${ext}`
+        const blob = new Blob([text], { type: 'text/plain' })
+        const link = document.createElement('a')
+        link.href = URL.createObjectURL(blob)
+        link.download = filename
+        link.click()
+
+        setTimeout(() => {
+            link.remove()
+        }, 1000)
+        emit('submit')
     }
 }
 </script>
