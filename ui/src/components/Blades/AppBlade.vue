@@ -117,21 +117,5 @@ const createOnly = async () => {
 
 const onSubmit = async () => {
     emit('submit', app.value)
-
-    //     if (appStore.appBladeMode === 'update') {
-    //         if (
-    //             await processStore.update(
-    //                 processStore.activeProcess.pmId,
-    //                 appStore.getCurrentApp()
-    //             )
-    //         ) {
-    //             processStore.refresh()
-    //             addSuccessfulToast('Updated successfully')
-    //         }
-    //     }
-    // } finally {
-    //     processStore.refresh()
-    //     appStore.appBladeOpen = false
-    // }
 }
 </script>

@@ -19,7 +19,7 @@ declare module 'vue' {
     DateTime: typeof import('./src/components/DateTime.vue')['default']
     DateTimePeriod: typeof import('./src/components/DateTimePeriod.vue')['default']
     DeploymentBlade: typeof import('./src/components/DeploymentBlade.vue')['default']
-    DescriptionBlade: typeof import('./src/components/DescriptionBlade.vue')['default']
+    DescriptionBlade: typeof import('./src/components/Blades/DescriptionBlade.vue')['default']
     EnvironmentProfiles: typeof import('./src/components/EnvironmentProfiles.vue')['default']
     FileSelector: typeof import('./src/components/FileSelector.vue')['default']
     FullHeight: typeof import('./src/components/FullHeight.vue')['default']

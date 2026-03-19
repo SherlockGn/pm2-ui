@@ -5,7 +5,9 @@
         class="w-200"
         :handle="false"
         :dismissible="true"
-        v-model:open="processStore.descriptionBladeOpen">
+        :open="props.open"
+        @update:open="e => e || emit('cancel')"
+        @animationEnd="e => e || emit('close')">
         <template #body>
             <UCommandPalette
                 :fuse="{
@@ -18,20 +20,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useProcessStore } from '../stores/process.js'
+import { ref, computed } from 'vue'
 
-const processStore = useProcessStore()
+const props = defineProps({
+    open: Boolean,
+    initVal: Object,
+    mode: {
+        type: String,
+        default: 'create'
+    }
+})
+
+const emit = defineEmits(['close', 'cancel'])
+
+const process = ref(props.initVal)
 
 const data = computed(() => {
-    if (processStore.activeProcess == null) {
+    if (process.value == null) {
         return []
     }
     return [
         {
             id: 'basic',
             label: 'Basic Information',
-            items: Object.entries(processStore.activeProcess)
+            items: Object.entries(process.value)
                 .filter(i => typeof i[1] !== 'object')
                 .map(i => {
                     return {
@@ -43,7 +55,7 @@ const data = computed(() => {
         {
             id: 'attr',
             label: 'Attributes',
-            items: processStore.activeProcess.attrs.map(i => {
+            items: process.value.attrs.map(i => {
                 return {
                     label: i.key,
                     suffix: i.value?.toString() ?? 'null'
@@ -53,7 +65,7 @@ const data = computed(() => {
         {
             id: 'rpc',
             label: 'RPCs',
-            items: processStore.activeProcess.rpc.map(i => {
+            items: process.value.rpc.map(i => {
                 return {
                     label: i.name,
                     suffix: i.isBuiltIn ? 'builtIn' : ''
@@ -63,7 +75,7 @@ const data = computed(() => {
         {
             id: 'metrics',
             label: 'Metrics',
-            items: processStore.activeProcess.metrics.map(i => {
+            items: process.value.metrics.map(i => {
                 return {
                     label: i.name,
                     suffix: `${i.value} ${i.unit ?? ''} ${i.type ? `(${i.type})` : ''}`
@@ -73,7 +85,7 @@ const data = computed(() => {
         {
             id: 'customEnv',
             label: 'Custom Environment Variables',
-            items: processStore.activeProcess.env.custom.map(i => {
+            items: process.value.env.custom.map(i => {
                 return {
                     label: i.key,
                     suffix: i.value.toString()
@@ -83,7 +95,7 @@ const data = computed(() => {
         {
             id: 'commonEnv',
             label: 'Common Environment Variables',
-            items: processStore.activeProcess.env.common.map(i => {
+            items: process.value.env.common.map(i => {
                 return {
                     label: i.key,
                     suffix: i.value.toString()

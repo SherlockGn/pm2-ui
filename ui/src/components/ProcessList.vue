@@ -193,6 +193,7 @@ import TableCommonAction from './TableCommonAction.vue'
 import TableFilterResult from './TableFilterResult.vue'
 import FullHeight from './FullHeight.vue'
 import AppBlade from './Blades/AppBlade.vue'
+import DescriptionBlade from './Blades/DescriptionBlade.vue'
 
 const userStore = useUserStore()
 const appStore = useAppStore()
@@ -375,8 +376,10 @@ const getActions = row => {
             label: 'View description',
             icon: 'i-lucide-file-text',
             async onSelect() {
-                processStore.activeProcess = row.original
-                processStore.descriptionBladeOpen = true
+                await createCommonBlade(DescriptionBlade, {
+                    initVal: row.original,
+                    subscribedEvents: ['cancel']
+                })
             },
             enabled: row.original.pmId >= 0
         },
