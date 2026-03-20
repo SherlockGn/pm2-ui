@@ -6,7 +6,7 @@ A full-featured, self-hosted web dashboard for [PM2](https://pm2.keymetrics.io/)
 ![Vue 3](https://img.shields.io/badge/Vue-3-brightgreen)
 ![License](https://img.shields.io/badge/license-ISC-blue)
 
-> ![Screenshot placeholder — Dashboard overview](screenshots/dashboard.png)
+![Dashboard overview](docs/assets/overview.png)
 
 ## Why PM2 UI?
 
@@ -27,21 +27,21 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 - File system browser for selecting script paths, working directories, and log files
 - View process attributes, environment variables, custom metrics, and RPC actions
 
-> ![Screenshot placeholder — Process management](screenshots/process-management.png)
+![Process parameters](docs/assets/parameters.png)
 
 ### Real-Time Monitoring
 - Per-process CPU and memory metrics with configurable collection intervals
 - Time-series charts with aggregation (AVG, SUM, MIN, MAX, COUNT) and adjustable sample duration
 - Buffered metric collection to minimize database overhead
 
-> ![Screenshot placeholder — Metrics chart](screenshots/metrics.png)
+![Metrics chart](docs/assets/metrics.png)
 
 ### Logs
 - Tail stdout and stderr logs directly in the browser
 - Configurable line count
 - Auto-refresh mode
 
-> ![Screenshot placeholder — Log viewer](screenshots/logs.png)
+![Log viewer](docs/assets/logs.png)
 
 ### IPC Communication
 - Send data messages to processes (`process:msg`)
@@ -49,13 +49,15 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 - Send OS signals (SIGINT, SIGTERM, etc.)
 - Configurable message subscriptions with response tracking
 
+![IPC communication](docs/assets/communication.png)
+
 ### Deployment
 - Full PM2 deployment workflow: setup → deploy → update → revert
 - SSH configuration (key, user, hosts, options)
 - Pre/post hooks for setup, deploy, and local operations
 - Command output displayed in a terminal-style viewer
 
-> ![Screenshot placeholder — Deployment](screenshots/deployment.png)
+![Deployment](docs/assets/deployment.png)
 
 ### Actions
 - Reset restart counters, flush logs
@@ -78,7 +80,7 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 - JWT key regeneration
 - CORS toggle
 
-> ![Screenshot placeholder — Admin log](screenshots/admin-log.png)
+![Administrative logs](docs/assets/adminLog.png)
 
 ## Tech Stack
 
