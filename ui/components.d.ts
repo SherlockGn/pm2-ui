@@ -15,7 +15,6 @@ declare module 'vue' {
     AppGroupProps: typeof import('./src/components/AppGroupProps.vue')['default']
     AvatarSelector: typeof import('./src/components/AvatarSelector.vue')['default']
     BackupBlade: typeof import('./src/components/Blades/BackupBlade.vue')['default']
-    BackupBladeDownloadBlade: typeof import('./src/components/Blades/BackupBladeDownloadBlade.vue')['default']
     BackupDownloadBlade: typeof import('./src/components/Blades/BackupDownloadBlade.vue')['default']
     DateTime: typeof import('./src/components/DateTime.vue')['default']
     DateTimePeriod: typeof import('./src/components/DateTimePeriod.vue')['default']

@@ -8,9 +8,9 @@
                 <UButton
                     v-bind="{
                         avatar: {
-                            src: logoSrc
+                            src: 'app.svg'
                         },
-                        label: collapsed ? undefined : 'My PM2 Dashboard'
+                        label: collapsed ? undefined : 'PM2 UI'
                     }"
                     color="neutral"
                     variant="ghost"
@@ -73,8 +73,6 @@
 <script setup>
 import { onMounted } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
-import logoSrc from '../assets/vue.svg'
-import UserMenu from '../components/UserMenu.vue'
 
 import { useUserStore } from '../stores/user.js'
 import { useAppStore } from '../stores/app.js'
@@ -83,6 +81,7 @@ import { useFsStore } from '../stores/fs.js'
 import { useDeploymentStore } from '../stores/deployment.js'
 import { useKvStore } from '../stores/kv.js'
 
+import UserMenu from '../components/UserMenu.vue'
 import UserBlade from '../components/Blades/UserBlade.vue'
 import AppBlade from '../components/Blades/AppBlade.vue'
 import DeploymentBlade from '../components/Blades/DeploymentBlade.vue'
