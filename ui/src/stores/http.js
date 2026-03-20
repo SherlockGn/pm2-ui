@@ -3,10 +3,7 @@ import { router } from '../router.js'
 
 export const request = axios.create({
     baseURL: import.meta.env.DEV ? 'http://localhost:12345/api' : '/api',
-    timeout: 5000,
-    headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-    },
+    timeout: 30000,
     responseType: 'json'
 })
 

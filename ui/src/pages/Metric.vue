@@ -52,9 +52,11 @@
             icon="i-lucide-refresh-ccw"
             variant="outline"
             label="Sync metric"
+            :disabled="!selected"
             @click="getMetrics" />
     </UFormField>
     <UCard
+        v-if="selected"
         ref="cardRef"
         :ui="{ root: 'overflow-visible', body: '!px-0 !pt-0 !pb-3' }">
         <template #header>

@@ -11,11 +11,16 @@
                 icon="i-lucide-refresh-ccw"
                 variant="outline"
                 label="Refresh"
+                :disabled="!selected"
                 @click="refresh" />
         </UFormField>
         <UFormField class="ml-5">
             <UDropdownMenu :items="sendActions">
-                <UButton color="primary" icon="i-lucide-send" variant="outline">
+                <UButton
+                    color="primary"
+                    icon="i-lucide-send"
+                    variant="outline"
+                    :disabled="!selected">
                     Send
                 </UButton>
             </UDropdownMenu>

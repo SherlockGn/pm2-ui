@@ -98,7 +98,7 @@ const execute = async () => {
 }
 
 const onOpen = async () => {
-    if (autoRun) {
+    if (autoRun.value) {
         await onSubmit()
     }
 }
