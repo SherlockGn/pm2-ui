@@ -4,13 +4,13 @@
         direction="right"
         :handle="false"
         :dismissible="true"
-        @animationEnd="e => (e ? onOpen() : emit('close'))"
-        :open="props.modelValue"
-        @update:open="e => emit('update:modelValue', e)">
+        :open="open"
+        @update:open="e => e || emit('cancel')"
+        @animationEnd="e => (e ? onOpen() : emit('close'))">
         <template #body>
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
                 <h2 class="text-highlighted font-semibold">
-                    {{ props.title }}
+                    {{ title }}
                 </h2>
                 <UButton
                     color="neutral"
@@ -20,26 +20,26 @@
             </div>
             <div class="w-200 p-2">
                 <UForm class="space-y-4 flex flex-col" @submit="onSubmit">
-                    <UFormField v-if="props.value" :label="props.value.label">
+                    <UFormField v-if="value" :label="value.label">
                         <UInputNumber
-                            v-if="props.value?.type === 'number'"
+                            v-if="value?.type === 'number'"
                             v-model="input"
-                            v-bind="props.value?.attrs ?? {}" />
+                            v-bind="value?.attrs ?? {}" />
                         <UInput
-                            v-if="props.value?.type === 'text'"
+                            v-if="value?.type === 'text'"
                             v-model="input"
                             class="w-80"
-                            v-bind="props.value?.attrs ?? {}" />
+                            v-bind="value?.attrs ?? {}" />
                     </UFormField>
                     <ProcessSelector
-                        v-if="props.value?.type === 'processSelector'"
+                        v-if="value?.type === 'processSelector'"
                         v-model="input"
                         :use-tooltip="false"
-                        v-bind="props.value?.attrs ?? {}"></ProcessSelector>
+                        v-bind="value?.attrs ?? {}"></ProcessSelector>
 
                     <UProgress animation="swing" v-if="loading" />
 
-                    <div class="mt-5 mb-20" v-if="!props.autoRun">
+                    <div class="mt-5 mb-20" v-if="!autoRun">
                         <UButton type="submit" class="">Submit</UButton>
                     </div>
                 </UForm>
@@ -50,12 +50,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import ProcessSelector from './ProcessSelector.vue'
-import Terminal from './Terminal.vue'
+import { computed, ref } from 'vue'
+import ProcessSelector from '../ProcessSelector.vue'
+import Terminal from '../Terminal.vue'
 
 const props = defineProps({
-    modelValue: Boolean,
+    open: Boolean,
+    initVal: Object,
     title: {
         type: String,
         default: 'Deployment Result'
@@ -65,14 +66,19 @@ const props = defineProps({
     exec: Function
 })
 
-const emit = defineEmits(['update:modelValue', 'close'])
+const emit = defineEmits(['cancel', 'close'])
+
+const title = computed(() => props.initVal.title)
+const value = computed(() => props.initVal.value)
+const autoRun = computed(() => props.initVal.autoRun)
+const exec = computed(() => props.initVal.exec)
 
 const getDefaultValue = () => {
-    if (props.value?.type === 'number') {
+    if (value?.type === 'number') {
         return 1
     }
 
-    if (props.value?.type === 'string') {
+    if (value?.type === 'string') {
         return ''
     }
 }
@@ -80,19 +86,19 @@ const getDefaultValue = () => {
 const onSubmit = async () => {
     try {
         loading.value = true
-        await exec()
+        await execute()
     } finally {
         loading.value = false
     }
 }
 const loading = ref(false)
 
-const exec = async () => {
-    data.value = await props.exec(input.value)
+const execute = async () => {
+    data.value = await exec.value(input.value)
 }
 
 const onOpen = async () => {
-    if (props.autoRun) {
+    if (autoRun) {
         await onSubmit()
     }
 }

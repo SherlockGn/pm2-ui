@@ -1,5 +1,5 @@
 import { render, h, ref, toRaw } from 'vue'
-import TerminalResultBlade from './components/TerminalResultBlade.vue'
+import TerminalResultBlade from './components/Blades/TerminalResultBlade.vue'
 
 export const formatDate = date => {
     if (!date) {
@@ -148,43 +148,10 @@ export const createCommonBlade = async (component, options = {}) => {
     return promise
 }
 
-export const createTerminalResultBlade = options => {
+export const createTerminalResultBlade = async options => {
     const { title, value, autoRun, exec } = options
-
-    const container = document.createElement('div')
-
-    const destroy = () => {
-        render(null, container)
-        container.remove()
-    }
-
-    const modelValue = ref(true)
-
-    const componentInstance = {
-        setup() {
-            return () =>
-                h(TerminalResultBlade, {
-                    modelValue: modelValue.value,
-                    title,
-                    value,
-                    autoRun,
-                    exec,
-                    'onUpdate:modelValue': value => {
-                        modelValue.value = value
-                    },
-                    onClose: () => {
-                        destroy()
-                    }
-                })
-        }
-    }
-
-    const vnode = h(componentInstance)
-    vnode.appContext = _context
-
-    render(vnode, container)
-
-    document.body.appendChild(container)
-
-    return { destroy }
+    return await createCommonBlade(TerminalResultBlade, {
+        initVal: { title, value, autoRun, exec },
+        subscribedEvents: ['cancel']
+    })
 }

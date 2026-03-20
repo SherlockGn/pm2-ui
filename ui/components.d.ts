@@ -40,7 +40,7 @@ declare module 'vue' {
     TableCommonAction: typeof import('./src/components/TableCommonAction.vue')['default']
     TableFilterResult: typeof import('./src/components/TableFilterResult.vue')['default']
     Terminal: typeof import('./src/components/Terminal.vue')['default']
-    TerminalResultBlade: typeof import('./src/components/TerminalResultBlade.vue')['default']
+    TerminalResultBlade: typeof import('./src/components/Blades/TerminalResultBlade.vue')['default']
     UApp: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/App.vue')['default']
     UAuthForm: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/AuthForm.vue')['default']
     UAvatar: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Avatar.vue')['default']

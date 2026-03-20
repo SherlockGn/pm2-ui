@@ -271,7 +271,7 @@ const getActions = row => {
 
 const startBackup = async () => {
     const { event, data } = await createCommonBlade(BackupBlade, {
-        initVal: { name: '' }
+        initVal: { name: `Backup-${new Date().toLocaleString()}` }
     })
     console.log(event, data)
     if (event === 'cancel') {

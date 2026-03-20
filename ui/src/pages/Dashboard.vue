@@ -193,46 +193,56 @@ const navigators = [
     }
 ]
 
+const addUser = async () => {
+    const { event, data } = await createCommonBlade(UserBlade, {
+        initVal: userStore.getDefault()
+    })
+    if (event === 'cancel') {
+        return
+    }
+    if (await userStore.createUser(data.user)) {
+        addSuccessfulToast('Created successfully')
+        await userStore.refresh()
+    }
+}
+
+const addProcess = async () => {
+    const { event, data } = await createCommonBlade(AppBlade, {
+        initVal: appStore.getDefaultUIApp(),
+        subscribedEvents: ['cancel', 'submit', 'createOnly']
+    })
+    if (event === 'cancel') {
+        return
+    }
+    const willStart = event === 'submit'
+    if (await processStore.create(appStore.fromUIObjectApp(data), willStart)) {
+        addSuccessfulToast('Created successfully!')
+        processStore.refresh()
+    }
+}
+
+const addDeployment = async () => {
+    const { event, data } = await createCommonBlade(DeploymentBlade, {
+        initVal: deploymentStore.getDefault()
+    })
+    if (event === 'cancel') {
+        return
+    }
+    if (await deploymentStore.create(data)) {
+        addSuccessfulToast('Created successfully')
+        deploymentStore.refresh()
+    }
+}
+
 const add = async () => {
     if (route.name === 'user') {
-        const { event, data } = await createCommonBlade(UserBlade, {
-            initVal: userStore.getDefault()
-        })
-        if (event === 'cancel') {
-            return
-        }
-        if (await userStore.createUser(data.user)) {
-            addSuccessfulToast('Created successfully')
-            await userStore.refresh()
-        }
+        await addUser()
     }
     if (route.name === 'management') {
-        const { event, data } = await createCommonBlade(AppBlade, {
-            initVal: appStore.getDefaultUIApp(),
-            subscribedEvents: ['cancel', 'submit', 'createOnly']
-        })
-        if (event === 'cancel') {
-            return
-        }
-        const willStart = event === 'submit'
-        if (
-            await processStore.create(appStore.fromUIObjectApp(data), willStart)
-        ) {
-            addSuccessfulToast('Created successfully!')
-            processStore.refresh()
-        }
+        await addProcess()
     }
     if (route.name === 'deployment') {
-        const { event, data } = await createCommonBlade(DeploymentBlade, {
-            initVal: deploymentStore.getDefault()
-        })
-        if (event === 'cancel') {
-            return
-        }
-        if (await deploymentStore.create(data)) {
-            addSuccessfulToast('Created successfully')
-            deploymentStore.refresh()
-        }
+        await addDeployment()
     }
 }
 </script>
