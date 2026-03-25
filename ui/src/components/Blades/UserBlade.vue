@@ -11,7 +11,9 @@
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
                 <h2 class="text-highlighted font-semibold">
                     {{
-                        props.mode === 'create' ? 'Create user' : 'Update user'
+                        props.mode === 'create'
+                            ? $t('userBlade.createUser')
+                            : $t('userBlade.updateUser')
                     }}
                 </h2>
 
@@ -27,14 +29,14 @@
                     :state="user"
                     class="space-y-4 flex flex-col h-[80vh]"
                     @submit="onSubmit">
-                    <UFormField label="Email" name="email">
+                    <UFormField :label="$t('userBlade.email')" name="email">
                         <UInput
                             :disabled="props.mode === 'update'"
                             v-model="user.email"
                             class="w-100" />
                     </UFormField>
 
-                    <UFormField label="Enabled" name="enabled">
+                    <UFormField :label="$t('userBlade.enabled')" name="enabled">
                         <USwitch
                             :disabled="
                                 props.mode === 'update' &&
@@ -43,7 +45,9 @@
                             v-model="user.enabled" />
                     </UFormField>
 
-                    <UFormField label="Super User" name="superUser">
+                    <UFormField
+                        :label="$t('userBlade.superUser')"
+                        name="superUser">
                         <USwitch
                             :disabled="
                                 props.mode === 'update' &&
@@ -52,15 +56,19 @@
                             v-model="user.superUser" />
                     </UFormField>
 
-                    <UFormField label="Avatar" name="avatar">
+                    <UFormField :label="$t('userBlade.avatar')" name="avatar">
                         <AvatarSelector v-model="user.avatar"></AvatarSelector>
                     </UFormField>
 
-                    <UFormField label="Display Name" name="displayName">
+                    <UFormField
+                        :label="$t('userBlade.displayName')"
+                        name="displayName">
                         <UInput v-model="user.displayName" class="w-100" />
                     </UFormField>
 
-                    <UFormField label="Password" name="password">
+                    <UFormField
+                        :label="$t('userBlade.password')"
+                        name="password">
                         <UInput
                             v-model="user.password"
                             type="password"
@@ -69,7 +77,9 @@
                     </UFormField>
 
                     <div class="mt-auto mb-20">
-                        <UButton type="submit" class="">Submit</UButton>
+                        <UButton type="submit" class="">
+                            {{ $t('common.submit') }}
+                        </UButton>
                     </div>
                 </UForm>
             </div>
@@ -79,8 +89,11 @@
 
 <script setup>
 import { ref, toRaw } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '../../stores/user.js'
 import AvatarSelector from '../AvatarSelector.vue'
+
+const { t } = useI18n()
 
 const userStore = useUserStore()
 
@@ -101,16 +114,16 @@ const passwordChanged = ref(false)
 const validate = state => {
     const errors = []
     if (!state.email) {
-        errors.push({ name: 'email', message: 'Required' })
+        errors.push({ name: 'email', message: t('common.required') })
     }
     if (!state.password) {
-        errors.push({ name: 'password', message: 'Required' })
+        errors.push({ name: 'password', message: t('common.required') })
     }
     if (!state.avatar) {
-        errors.push({ name: 'avatar', message: 'Required' })
+        errors.push({ name: 'avatar', message: t('common.required') })
     }
     if (!state.displayName) {
-        errors.push({ name: 'displayName', message: 'Required' })
+        errors.push({ name: 'displayName', message: t('common.required') })
     }
     return errors
 }

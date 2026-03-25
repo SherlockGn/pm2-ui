@@ -35,7 +35,7 @@
             "
             :content="{ align: 'end' }">
             <UButton
-                label="Columns"
+                :label="$t('common.columns')"
                 color="neutral"
                 variant="outline"
                 trailing-icon="i-lucide-chevron-down"

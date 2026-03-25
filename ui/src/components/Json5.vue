@@ -28,16 +28,17 @@
                         'w-1.5 h-1.5 rounded-full',
                         isValid ? 'bg-emerald-500' : 'bg-rose-500'
                     ]"></div>
-                <span
-                    class="text-[10px] font-bold text-slate-400 uppercase">
-                    {{ isValid ? 'Syntax OK' : 'Syntax Error' }}
+                <span class="text-[10px] font-bold text-slate-400 uppercase">
+                    {{
+                        isValid ? $t('json5.syntaxOk') : $t('json5.syntaxError')
+                    }}
                 </span>
             </div>
             <button
                 v-if="!readonly"
                 @click.prevent="formatSource"
                 class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800">
-                PRETTIFY
+                {{ $t('json5.prettify') }}
             </button>
         </div>
     </div>

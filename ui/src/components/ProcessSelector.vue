@@ -1,6 +1,6 @@
 <template>
     <div class="flex gap-2 items-center">
-        <UFormField label="Select the process">
+        <UFormField :label="$t('processSelector.selectTheProcess')">
             <USelectMenu
                 :items="processStore.managedProcesses"
                 v-model="selected"
@@ -8,7 +8,7 @@
                 @update:modelValue="e => emit('update:modelValue', e)"
                 :filter-fields="['name']"
                 icon="i-lucide-user"
-                placeholder="Select process"
+                :placeholder="$t('processSelector.selectProcess')"
                 class="w-80">
                 <template #leading>
                     <UIcon name="i-lucide-app-window-mac" />
@@ -57,6 +57,9 @@ import { onMounted, computed } from 'vue'
 
 import { useProcessStore } from '../stores/process.js'
 import { getStatusColor, addSuccessfulToast } from '../utils.js'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
     modelValue: Object,
@@ -73,7 +76,7 @@ const selected = computed(() => props.modelValue)
 
 const refresh = async () => {
     if (await processStore.refresh()) {
-        addSuccessfulToast('Refreshed successfully!')
+        addSuccessfulToast(t('toast.refreshedSuccessfully'))
     }
     emit('refresh')
 }

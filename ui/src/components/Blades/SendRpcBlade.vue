@@ -10,7 +10,7 @@
         <template #body>
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
                 <h2 class="text-highlighted font-semibold">
-                    Remote Procedure Call (RPC)
+                    {{ $t('sendRpcBlade.title') }}
                 </h2>
                 <UButton
                     color="neutral"
@@ -22,18 +22,22 @@
                 <UForm
                     class="space-y-4 flex flex-col h-[80vh]"
                     @submit="onSubmit">
-                    <UFormField label="Select RPC name">
+                    <UFormField :label="$t('sendRpcBlade.selectRpcName')">
                         <USelect
                             v-model="rpcName"
                             :items="rpcNames"
                             class="w-64" />
                     </UFormField>
-                    <UFormField v-if="hasParam" label="Parameter">
+                    <UFormField
+                        v-if="hasParam"
+                        :label="$t('sendRpcBlade.parameter')">
                         <Json5 v-model="contentString" class="w-120" />
                     </UFormField>
 
                     <div class="mt-auto mb-20">
-                        <UButton type="submit" class="">Submit</UButton>
+                        <UButton type="submit" class="">
+                            {{ $t('common.submit') }}
+                        </UButton>
                     </div>
                 </UForm>
             </div>

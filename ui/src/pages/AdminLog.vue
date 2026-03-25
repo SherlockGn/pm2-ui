@@ -5,44 +5,44 @@
                 color="primary"
                 icon="i-lucide-refresh-ccw"
                 variant="outline"
-                label="Refresh"
+                :label="$t('common.refresh')"
                 @click="refresh" />
         </UFormField>
     </div>
 
     <TableCommonAction :use-filter="false" :table="table">
-        <UFormField label="Filter action">
+        <UFormField :label="$t('adminLog.filterAction')">
             <USelect
                 @change="refreshDataDebounce"
-                placeholder="Filter actions..."
+                :placeholder="$t('adminLog.filterActions')"
                 v-model="actionList"
                 multiple
                 :items="actions"
                 class="w-64" />
         </UFormField>
-        <UFormField label="Filter category">
+        <UFormField :label="$t('adminLog.filterCategory')">
             <USelect
                 @change="refreshDataDebounce"
-                placeholder="Filter categories..."
+                :placeholder="$t('adminLog.filterCategories')"
                 v-model="categoryList"
                 multiple
                 :items="categories"
                 class="w-64" />
         </UFormField>
-        <UFormField label="Filter status">
+        <UFormField :label="$t('adminLog.filterStatus')">
             <USelect
                 @change="refreshDataDebounce"
-                placeholder="Filter statuses..."
+                :placeholder="$t('adminLog.filterStatuses')"
                 v-model="statusList"
                 multiple
                 :items="statuses"
                 class="w-64" />
         </UFormField>
-        <UFormField label="Filter resource name">
+        <UFormField :label="$t('adminLog.filterResourceName')">
             <UInput
                 @update:modelValue="refreshDataDebounce"
                 v-model="resourceNamePattern"
-                placeholder="Filter resource name..."
+                :placeholder="$t('adminLog.filterResourceNamePlaceholder')"
                 class="w-64" />
         </UFormField>
     </TableCommonAction>
@@ -64,10 +64,10 @@
                     class="uppercase"
                     variant="subtle"
                     color="success">
-                    Successful
+                    {{ $t('adminLog.successful') }}
                 </UBadge>
                 <UBadge v-else class="uppercase" variant="subtle" color="error">
-                    Failed
+                    {{ $t('adminLog.failed') }}
                 </UBadge>
             </template>
             <template #actions-cell="{ row }">
@@ -95,6 +95,7 @@
 
 <script setup>
 import { ref, useTemplateRef, nextTick, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAdminLogStore } from '../stores/adminLog.js'
 import {
     addSuccessfulToast,
@@ -104,6 +105,8 @@ import {
 import { useDebounceFn } from '@vueuse/core'
 
 import TableCommonAction from '../components/TableCommonAction.vue'
+
+const { t } = useI18n()
 
 onMounted(async () => {
     await refresh()
@@ -127,7 +130,7 @@ const refreshDataDebounce = useDebounceFn(refreshData, 300)
 
 const refresh = async () => {
     if (await refreshData()) {
-        addSuccessfulToast('Refreshed successfully!')
+        addSuccessfulToast(t('toast.refreshedSuccessfully'))
     }
 }
 
@@ -144,30 +147,30 @@ const columns = ref([
     },
     {
         accessorKey: 'action',
-        header: 'Action',
+        header: t('adminLog.action'),
         cell: ({ row }) => getLabel(row.original.action, actions.value)
     },
     {
         accessorKey: 'category',
-        header: 'Category',
+        header: t('adminLog.category'),
         cell: ({ row }) => getLabel(row.original.category, categories.value)
     },
     {
         accessorKey: 'status',
-        header: 'Status'
+        header: t('adminLog.status')
     },
     {
         accessorKey: 'resource name',
-        header: 'Resource Name',
+        header: t('adminLog.resourceName'),
         cell: ({ row }) => row.original.resourceName
     },
     {
         accessorKey: 'triggeredBy',
-        header: 'Triggered By'
+        header: t('adminLog.triggeredBy')
     },
     {
         accessorKey: 'createdAt',
-        header: 'Create Time',
+        header: t('adminLog.createTime'),
         cell: ({ row }) => formatDate(row.original.createdAt)
     },
     {
@@ -187,14 +190,14 @@ const getActions = row => {
     return [
         {
             type: 'label',
-            label: 'Actions'
+            label: t('common.actions')
         },
         {
-            label: 'View resource data',
+            label: t('adminLog.viewResourceData'),
             icon: 'i-lucide-view',
             async onSelect() {
                 createTerminalResultBlade({
-                    title: 'Resource data',
+                    title: t('adminLog.resourceData'),
                     autoRun: true,
                     exec: async () => {
                         return {
@@ -239,114 +242,114 @@ const statusFilter = computed(() => {
 const actions = ref([
     {
         'value': 'rpc',
-        'label': 'Call RPC'
+        'label': t('adminLog.actions.callRpc')
     },
     {
-        'label': 'Create',
+        'label': t('adminLog.actions.create'),
         'value': 'create'
     },
     {
         'value': 'createAndStart',
-        'label': 'Create and Start'
+        'label': t('adminLog.actions.createAndStart')
     },
     {
-        'label': 'Delete',
+        'label': t('adminLog.actions.delete'),
         'value': 'delete'
     },
     {
         'value': 'deploy',
-        'label': 'Deploy'
+        'label': t('adminLog.actions.deploy')
     },
     {
         'value': 'exec',
-        'label': 'Execute'
+        'label': t('adminLog.actions.execute')
     },
     {
-        'label': 'Flush Log',
+        'label': t('adminLog.actions.flushLog'),
         'value': 'flushLog'
     },
     {
-        'label': 'Kill',
+        'label': t('adminLog.actions.kill'),
         'value': 'kill'
     },
     {
-        'label': 'Log In',
+        'label': t('adminLog.actions.logIn'),
         'value': 'login'
     },
     {
         'value': 'manage',
-        'label': 'Manage'
+        'label': t('adminLog.actions.manage')
     },
     {
-        'label': 'Ping',
+        'label': t('adminLog.actions.ping'),
         'value': 'ping'
     },
     {
         'value': 'reload',
-        'label': 'Reload'
+        'label': t('adminLog.actions.reload')
     },
     {
-        'label': 'Regenerate Key',
+        'label': t('adminLog.actions.regenerateKey'),
         'value': 'regenerateKey'
     },
     {
-        'label': 'Reset Counter',
+        'label': t('adminLog.actions.resetCounter'),
         'value': 'resetCounter'
     },
     {
         'value': 'restart',
-        'label': 'Restart'
+        'label': t('adminLog.actions.restart')
     },
     {
-        'label': 'Restore',
+        'label': t('adminLog.actions.restore'),
         'value': 'restore'
     },
     {
-        'label': 'Resurrect',
+        'label': t('adminLog.actions.resurrect'),
         'value': 'resurrect'
     },
     {
         'value': 'revert',
-        'label': 'Revert'
+        'label': t('adminLog.actions.revert')
     },
     {
-        'label': 'Save',
+        'label': t('adminLog.actions.save'),
         'value': 'save'
     },
     {
         'value': 'sendData',
-        'label': 'Send Data'
+        'label': t('adminLog.actions.sendData')
     },
     {
         'value': 'sendSignal',
-        'label': 'Send Signal'
+        'label': t('adminLog.actions.sendSignal')
     },
     {
         'value': 'setup',
-        'label': 'Setup'
+        'label': t('adminLog.actions.setup')
     },
     {
         'value': 'start',
-        'label': 'Start'
+        'label': t('adminLog.actions.start')
     },
     {
         'value': 'stop',
-        'label': 'Stop'
+        'label': t('adminLog.actions.stop')
     },
     {
-        'label': 'Update',
+        'label': t('adminLog.actions.update'),
         'value': 'update'
     },
     {
-        'label': 'Update PM2',
+        'label': t('adminLog.actions.updatePm2'),
         'value': 'updatePm2'
     },
     {
         'value': 'upgrade',
-        'label': 'Upgrade'
+        'label': t('adminLog.actions.upgrade')
     },
     {
-        'label': 'Upload',
+        'label': t('adminLog.actions.upload'),
         'value': 'upload'
     }
 ])
@@ -354,38 +357,38 @@ const actions = ref([
 const categories = ref([
     {
         'value': 'user',
-        'label': 'User'
+        'label': t('adminLog.categories.user')
     },
     {
-        'label': 'Process',
+        'label': t('adminLog.categories.process'),
         'value': 'process'
     },
     {
-        'label': 'Setting',
+        'label': t('adminLog.categories.setting'),
         'value': 'setting'
     },
     {
-        'label': 'Communication',
+        'label': t('adminLog.categories.communication'),
         'value': 'communication'
     },
     {
-        'label': 'Cleanup',
+        'label': t('adminLog.categories.cleanup'),
         'value': 'cleanup'
     },
     {
-        'label': 'Deployment',
+        'label': t('adminLog.categories.deployment'),
         'value': 'deployment'
     },
     {
-        'label': 'Action',
+        'label': t('adminLog.categories.action'),
         'value': 'action'
     },
     {
-        'label': 'Backup',
+        'label': t('adminLog.categories.backup'),
         'value': 'backup'
     },
     {
-        'label': 'Global Setting',
+        'label': t('adminLog.categories.globalSetting'),
         'value': 'kv'
     }
 ])
@@ -393,10 +396,10 @@ const categories = ref([
 const statuses = ref([
     {
         'value': 'success',
-        'label': 'Successful'
+        'label': t('adminLog.successful')
     },
     {
-        'label': 'Failed',
+        'label': t('adminLog.failed'),
         'value': 'failed'
     }
 ])

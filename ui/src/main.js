@@ -6,6 +6,7 @@ import lucide from '@iconify-json/lucide/icons.json'
 import streamlineStickiesColor from '@iconify-json/streamline-stickies-color/icons.json'
 
 import { router } from './router.js'
+import { i18n } from './i18n.js'
 import './style.css'
 import App from './App.vue'
 
@@ -18,6 +19,7 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+app.use(i18n)
 app.use(nuxtUi)
 app.use(MyComponentsPlugin)
 

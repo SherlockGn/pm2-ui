@@ -10,7 +10,7 @@
                 color="primary"
                 icon="i-lucide-refresh-ccw"
                 variant="outline"
-                label="Refresh"
+                :label="$t('common.refresh')"
                 :disabled="!selected"
                 @click="refresh" />
         </UFormField>
@@ -21,27 +21,27 @@
                     icon="i-lucide-send"
                     variant="outline"
                     :disabled="!selected">
-                    Send
+                    {{ $t('communication.send') }}
                 </UButton>
             </UDropdownMenu>
         </UFormField>
     </div>
 
     <TableCommonAction :use-filter="false" :table="table">
-        <UFormField label="Filter type">
+        <UFormField :label="$t('communication.filterType')">
             <USelect
                 @change="refreshDataDebounce"
-                placeholder="Filter type..."
+                :placeholder="$t('communication.filterTypePlaceholder')"
                 v-model="typeList"
                 multiple
                 :items="types"
                 class="w-64" />
         </UFormField>
-        <UFormField label="Filter name">
+        <UFormField :label="$t('communication.filterName')">
             <UInput
                 @update:modelValue="refreshDataDebounce"
                 v-model="namePattern"
-                placeholder="Filter name..."
+                :placeholder="$t('communication.filterNamePlaceholder')"
                 class="w-64" />
         </UFormField>
     </TableCommonAction>
@@ -93,6 +93,7 @@
 
 <script setup>
 import { ref, useTemplateRef, nextTick, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useCommunicationStore } from '../stores/communication.js'
 import { useUserStore } from '../stores/user.js'
 import { addSuccessfulToast, createCommonBlade, formatDate } from '../utils.js'
@@ -104,6 +105,8 @@ import SendSignalBlade from '../components/Blades/SendSignalBlade.vue'
 import SendRpcBlade from '../components/Blades/SendRpcBlade.vue'
 import SendDataBlade from '../components/Blades/SendDataBlade.vue'
 import ViewDataBlade from '../components/Blades/ViewDataBlade.vue'
+
+const { t } = useI18n()
 
 const selected = ref(null)
 
@@ -125,7 +128,7 @@ const refreshDataDebounce = useDebounceFn(refreshData, 300)
 
 const refresh = async () => {
     if (await refreshData()) {
-        addSuccessfulToast('Refreshed successfully!')
+        addSuccessfulToast(t('toast.refreshedSuccessfully'))
     }
 }
 
@@ -137,25 +140,25 @@ const columns = ref([
     },
     {
         accessorKey: 'type',
-        header: 'Type'
+        header: t('communication.type')
     },
     {
         accessorKey: 'name',
-        header: 'Name',
+        header: t('communication.name'),
         cell: ({ row }) => row.original.name
     },
     {
         accessorKey: 'triggeredBy',
-        header: 'Triggered By'
+        header: t('communication.triggeredBy')
     },
     {
         accessorKey: 'createdAt',
-        header: 'Create Time',
+        header: t('communication.createTime'),
         cell: ({ row }) => formatDate(row.original.createdAt)
     },
     {
         accessorKey: 'updatedAt',
-        header: 'Update Time',
+        header: t('communication.updateTime'),
         cell: ({ row }) => formatDate(row.original.updatedAt)
     },
     {
@@ -175,10 +178,10 @@ const getActions = row => {
     return [
         {
             type: 'label',
-            label: 'Actions'
+            label: t('common.actions')
         },
         {
-            label: 'View data',
+            label: t('communication.viewData'),
             icon: 'i-lucide-view',
             async onSelect() {
                 await createCommonBlade(ViewDataBlade, {
@@ -194,26 +197,26 @@ const namePattern = ref('')
 
 const types = ref([
     {
-        label: 'Receive Data',
+        label: t('communication.types.receiveData'),
         value: 'recMsg'
     },
     {
-        label: 'Request Data',
+        label: t('communication.types.requestData'),
         value: 'reqMsg'
     },
     {
-        label: 'RPC',
+        label: t('communication.types.rpc'),
         value: 'rpc'
     },
     {
-        label: 'Send Signal',
+        label: t('communication.types.sendSignal'),
         value: 'sig'
     }
 ])
 
 const sendActions = ref([
     {
-        label: 'Send Signal',
+        label: t('communication.sendActions.sendSignal'),
         icon: 'i-lucide-signal',
         async onSelect() {
             const { event, data } = await createCommonBlade(SendSignalBlade)
@@ -223,13 +226,13 @@ const sendActions = ref([
             if (
                 await communicationStore.sendSignal(selected.value.pmId, data)
             ) {
-                addSuccessfulToast('Sent successfully!')
+                addSuccessfulToast(t('toast.sentSuccessfully'))
                 await refreshData()
             }
         }
     },
     {
-        label: 'RPC',
+        label: t('communication.sendActions.rpc'),
         icon: 'i-lucide-phone-outgoing',
         async onSelect() {
             const { event, data } = await createCommonBlade(SendRpcBlade, {
@@ -245,13 +248,13 @@ const sendActions = ref([
                     data.content
                 )
             ) {
-                addSuccessfulToast('Sent successfully!')
+                addSuccessfulToast(t('toast.sentSuccessfully'))
                 await refreshData()
             }
         }
     },
     {
-        label: 'Send Data',
+        label: t('communication.sendActions.sendData'),
         icon: 'i-lucide-package',
         async onSelect() {
             const { event, data } = await createCommonBlade(SendDataBlade)
@@ -259,7 +262,7 @@ const sendActions = ref([
                 return
             }
             if (await communicationStore.sendData(selected.value.pmId, data)) {
-                addSuccessfulToast('Sent successfully!')
+                addSuccessfulToast(t('toast.sentSuccessfully'))
                 await refreshData()
             }
         }

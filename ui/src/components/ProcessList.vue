@@ -3,12 +3,12 @@
         <TableCommonAction
             :table="table"
             filterProp="name"
-            filterText="Filter name...">
+            :filterText="$t('processList.filterName')">
             <UButton
                 color="primary"
                 icon="i-lucide-refresh-ccw"
                 variant="outline"
-                label="Refresh"
+                :label="$t('common.refresh')"
                 @click="refresh" />
         </TableCommonAction>
         <FullHeight>
@@ -22,42 +22,54 @@
                         <SortableTableHeader :column="column" label="#" />
                     </template>
                     <template #name-header="{ column }">
-                        <SortableTableHeader :column="column" label="Name" />
+                        <SortableTableHeader
+                            :column="column"
+                            :label="$t('processList.name')" />
                     </template>
                     <template #script-header="{ column }">
-                        <SortableTableHeader :column="column" label="Script" />
+                        <SortableTableHeader
+                            :column="column"
+                            :label="$t('processList.script')" />
                     </template>
                     <template #status-header="{ column }">
-                        <SortableTableHeader :column="column" label="Status" />
+                        <SortableTableHeader
+                            :column="column"
+                            :label="$t('processList.status')" />
                     </template>
                     <template #mode-header="{ column }">
-                        <SortableTableHeader :column="column" label="Mode" />
+                        <SortableTableHeader
+                            :column="column"
+                            :label="$t('processList.mode')" />
                     </template>
                     <template #restartCount-header="{ column }">
                         <SortableTableHeader
                             :column="column"
-                            label="Restart Count" />
+                            :label="$t('processList.restartCount')" />
                     </template>
                     <template #upTime-header="{ column }">
                         <SortableTableHeader
                             :column="column"
-                            label="Run Period" />
+                            :label="$t('processList.runPeriod')" />
                     </template>
                     <template #cpu-header="{ column }">
-                        <SortableTableHeader :column="column" label="CPU" />
+                        <SortableTableHeader
+                            :column="column"
+                            :label="$t('processList.cpu')" />
                     </template>
                     <template #memory-header="{ column }">
-                        <SortableTableHeader :column="column" label="Memory" />
+                        <SortableTableHeader
+                            :column="column"
+                            :label="$t('processList.memory')" />
                     </template>
                     <template #createdBy-header="{ column }">
                         <SortableTableHeader
                             :column="column"
-                            label="Created By" />
+                            :label="$t('processList.createdBy')" />
                     </template>
                     <template #createdAt-header="{ column }">
                         <SortableTableHeader
                             :column="column"
-                            label="Create Time" />
+                            :label="$t('processList.createTime')" />
                     </template>
                     <template #name-cell="{ row }">
                         <ULink
@@ -81,7 +93,7 @@
                         <UKbd v-if="row.original.exeMode">
                             {{ row.original.exeMode.replace('_mode', '') }}
                         </UKbd>
-                        <template v-else>N/A</template>
+                        <template v-else>{{ $t('common.na') }}</template>
                     </template>
                     <template #createdBy-cell="{ row }">
                         <ULink
@@ -91,7 +103,7 @@
                             {{
                                 userStore.users.find(
                                     u => u.id === row.original.userId
-                                )?.displayName ?? 'Anonymous'
+                                )?.displayName ?? $t('common.anonymous')
                             }}
                         </ULink>
                         <UBadge
@@ -99,7 +111,7 @@
                             class="uppercase"
                             variant="subtle"
                             color="warning">
-                            Unmanaged
+                            {{ $t('common.unmanaged') }}
                         </UBadge>
                     </template>
                     <template #script-cell="{ row }">
@@ -122,7 +134,7 @@
                                         ? toFriendlyPeriod(
                                               new Date() - row.original.upTime
                                           )
-                                        : 'N/A'
+                                        : $t('common.na')
                                 }}
                             </ULink>
                         </UTooltip>
@@ -143,7 +155,7 @@
                                 color="neutral"
                                 variant="outline"
                                 class="ml-3">
-                                Restart required
+                                {{ $t('processList.restartRequired') }}
                             </UBadge>
                         </span>
                     </template>
@@ -174,6 +186,7 @@
 
 <script setup>
 import { onMounted, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useClipboard } from '@vueuse/core'
 
 import { useProcessStore } from '../stores/process.js'
@@ -199,6 +212,7 @@ const userStore = useUserStore()
 const appStore = useAppStore()
 const processStore = useProcessStore()
 const { copy } = useClipboard()
+const { t } = useI18n()
 
 onMounted(async () => {
     await processStore.refresh()
@@ -207,7 +221,7 @@ onMounted(async () => {
 
 const refresh = async () => {
     if (await processStore.refresh()) {
-        addSuccessfulToast('Refreshed successfully!')
+        addSuccessfulToast(t('toast.refreshedSuccessfully'))
     }
 }
 
@@ -269,10 +283,10 @@ const getActions = row => {
     return [
         {
             type: 'label',
-            label: 'Actions'
+            label: t('common.actions')
         },
         {
-            label: 'Start',
+            label: t('processList.start'),
             icon: 'i-lucide-play',
             async onSelect() {
                 if (
@@ -281,14 +295,14 @@ const getActions = row => {
                         row.original.app
                     )
                 ) {
-                    addSuccessfulToast('Started successfully!')
+                    addSuccessfulToast(t('toast.startedSuccessfully'))
                     processStore.refresh()
                 }
             },
             enabled: row.original.status?.toLowerCase() !== 'online'
         },
         {
-            label: 'Restart',
+            label: t('processList.restart'),
             icon: 'i-lucide-list-restart',
             async onSelect() {
                 if (
@@ -297,46 +311,46 @@ const getActions = row => {
                         row.original.app
                     )
                 ) {
-                    addSuccessfulToast('Restarted successfully!')
+                    addSuccessfulToast(t('toast.restartedSuccessfully'))
                     processStore.refresh()
                 }
             },
             enabled: row.original.status?.toLowerCase() === 'online'
         },
         {
-            label: 'Reload',
+            label: t('processList.reload'),
             icon: 'i-lucide-refresh-ccw-dot',
             async onSelect() {
                 if (await processStore.reload(row.original.pmId)) {
-                    addSuccessfulToast('Reloaded successfully!')
+                    addSuccessfulToast(t('toast.reloadedSuccessfully'))
                     processStore.refresh()
                 }
             },
             enabled: row.original.status?.toLowerCase() === 'online'
         },
         {
-            label: 'Stop',
+            label: t('processList.stop'),
             icon: 'i-lucide-square-stop',
             async onSelect() {
                 if (await processStore.stop(row.original.pmId)) {
-                    addSuccessfulToast('Stopped successfully!')
+                    addSuccessfulToast(t('toast.stoppedSuccessfully'))
                     processStore.refresh()
                 }
             },
             enabled: row.original.status?.toLowerCase() === 'online'
         },
         {
-            label: 'Delete',
+            label: t('processList.delete'),
             icon: 'i-lucide-trash-2',
             async onSelect() {
                 if (await processStore.deleteItem(row.original.pmId)) {
-                    addSuccessfulToast('Deleted successfully!')
+                    addSuccessfulToast(t('toast.deletedSuccessfully'))
                     await processStore.refresh()
                 }
             }
         },
         {
-            label: 'Edit configurations',
+            label: t('processList.editConfigurations'),
             icon: 'i-lucide-edit',
             async onSelect() {
                 const { event, data } = await createCommonBlade(AppBlade, {
@@ -354,26 +368,26 @@ const getActions = row => {
                         appStore.fromUIObjectApp(data)
                     )
                 ) {
-                    addSuccessfulToast('Updated successfully!')
+                    addSuccessfulToast(t('toast.updatedSuccessfully'))
                     processStore.refresh()
                 }
             },
             enabled: row.original.app != null
         },
         {
-            label: 'Manage configuration',
+            label: t('processList.manageConfiguration'),
             icon: 'i-lucide-tower-control',
             async onSelect() {
                 const app = appStore.getAppFromProcess(row.original)
                 if (await processStore.manage(row.original.pmId, app)) {
-                    addSuccessfulToast('Managed successfully!')
+                    addSuccessfulToast(t('toast.managedSuccessfully'))
                     processStore.refresh()
                 }
             },
             enabled: row.original.app == null
         },
         {
-            label: 'View description',
+            label: t('processList.viewDescription'),
             icon: 'i-lucide-file-text',
             async onSelect() {
                 await createCommonBlade(DescriptionBlade, {
@@ -384,20 +398,20 @@ const getActions = row => {
             enabled: row.original.pmId >= 0
         },
         {
-            label: 'Copy configuration as JSON',
+            label: t('processList.copyConfigurationAsJson'),
             icon: 'i-lucide-copy',
             async onSelect() {
                 copy(appStore.toJsonObjectApp(row.original.app))
-                addSuccessfulToast('Copied successfully!')
+                addSuccessfulToast(t('toast.copiedSuccessfully'))
             },
             enabled: row.original.app != null
         },
         {
-            label: 'Duplicate configuration',
+            label: t('processList.duplicateConfiguration'),
             icon: 'i-lucide-trending-up-down',
             async onSelect() {
                 if (await processStore.create(row.original.app, false)) {
-                    addSuccessfulToast('Duplicated successfully!')
+                    addSuccessfulToast(t('toast.duplicatedSuccessfully'))
                     await processStore.refresh()
                 }
             },

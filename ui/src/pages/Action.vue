@@ -2,62 +2,76 @@
     <div>
         <UTabs variant="link" :items="tabs" class="w-full">
             <template #process>
-                <UFormField label="Reset process restart counter" class="mt-8">
+                <UFormField
+                    :label="$t('action.resetProcessRestartCounter')"
+                    class="mt-8">
                     <UButton icon="i-lucide-timer-reset" @click="resetCounter">
-                        Reset
+                        {{ $t('action.reset') }}
                     </UButton>
                 </UFormField>
-                <UFormField label="Clear log file" class="mt-8">
+                <UFormField :label="$t('action.clearLogFile')" class="mt-8">
                     <UButton icon="i-lucide-brush-cleaning" @click="flushLog">
-                        Clear
+                        {{ $t('action.clear') }}
                     </UButton>
                 </UFormField>
             </template>
             <template #startup>
-                <UFormField label="Generate startup script" class="mt-8">
+                <UFormField
+                    :label="$t('action.generateStartupScript')"
+                    class="mt-8">
                     <UButton icon="i-lucide-arrow-big-up-dash" @click="startup">
-                        Startup
+                        {{ $t('action.startup') }}
                     </UButton>
                 </UFormField>
-                <UFormField label="Generate unstartup script" class="mt-8">
+                <UFormField
+                    :label="$t('action.generateUnstartupScript')"
+                    class="mt-8">
                     <UButton
                         icon="i-lucide-arrow-big-down-dash"
                         @click="unstartup">
-                        Unstartup
+                        {{ $t('action.unstartup') }}
                     </UButton>
                 </UFormField>
             </template>
             <template #persist>
-                <UFormField label="Save processes" class="mt-8">
+                <UFormField :label="$t('action.saveProcesses')" class="mt-8">
                     <UButton icon="i-lucide-archive" @click="save">
-                        Save
+                        {{ $t('action.save') }}
                     </UButton>
                 </UFormField>
-                <UFormField label="Resurrect processes" class="mt-8">
+                <UFormField
+                    :label="$t('action.resurrectProcesses')"
+                    class="mt-8">
                     <UButton icon="i-lucide-archive-restore" @click="resurrect">
-                        Resurrect
+                        {{ $t('action.resurrect') }}
                     </UButton>
                     <UBadge variant="subtle" color="warning" class="ml-3">
-                        Processes resurrected will be unmanaged
+                        {{ $t('action.processesResurrectedWillBeUnmanaged') }}
                     </UBadge>
                 </UFormField>
             </template>
             <template #global>
                 <UFormField
-                    label="Update the in-memory PM2 daemon"
+                    :label="$t('action.updateTheInMemoryPm2Daemon')"
                     class="mt-8">
                     <UButton icon="i-lucide-folder-sync" @click="update">
-                        Update
+                        {{ $t('common.update') }}
                     </UButton>
                 </UFormField>
-                <UFormField label="Kill the PM2 daemon" class="mt-8">
-                    <UButton icon="i-lucide-eraser" @click="kill">Kill</UButton>
+                <UFormField :label="$t('action.killThePm2Daemon')" class="mt-8">
+                    <UButton icon="i-lucide-eraser" @click="kill">
+                        {{ $t('action.kill') }}
+                    </UButton>
                     <UBadge variant="subtle" color="warning" class="ml-3">
-                        All functionalities will not work and all PM2 processes will be deleted after this action
+                        {{ $t('action.killWarning') }}
                     </UBadge>
                 </UFormField>
-                <UFormField label="Ping or daemonized PM2" class="mt-8">
-                    <UButton icon="i-lucide-link" @click="ping">Ping</UButton>
+                <UFormField
+                    :label="$t('action.pingOrDaemonizedPm2')"
+                    class="mt-8">
+                    <UButton icon="i-lucide-link" @click="ping">
+                        {{ $t('action.ping') }}
+                    </UButton>
                 </UFormField>
             </template>
         </UTabs>
@@ -66,38 +80,40 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { useActionStore } from '../stores/action.js'
 import { createTerminalResultBlade } from '../utils.js'
 
+const { t } = useI18n()
 const actionStore = useActionStore()
 
 const tabs = ref([
     {
         slot: 'process',
-        label: 'Process',
+        label: t('action.tabs.process'),
         icon: 'i-lucide-app-window-mac'
     },
     {
         slot: 'startup',
-        label: 'Startup',
+        label: t('action.tabs.startup'),
         icon: 'i-lucide-arrow-big-up-dash'
     },
     {
         slot: 'persist',
-        label: 'Persist',
+        label: t('action.tabs.persist'),
         icon: 'i-lucide-folder-archive'
     },
     {
         slot: 'global',
-        label: 'Global',
+        label: t('action.tabs.global'),
         icon: 'i-lucide-globe'
     }
 ])
 
 const resetCounter = async () => {
     createTerminalResultBlade({
-        title: 'Reset process restart counter',
+        title: t('action.resetProcessRestartCounter'),
         value: {
             type: 'processSelector'
         },
@@ -110,7 +126,7 @@ const resetCounter = async () => {
 
 const flushLog = async () => {
     createTerminalResultBlade({
-        title: 'Clear log file',
+        title: t('action.clearLogFile'),
         value: {
             type: 'processSelector'
         },
@@ -123,7 +139,7 @@ const flushLog = async () => {
 
 const startup = async () => {
     createTerminalResultBlade({
-        title: 'Generate startup script',
+        title: t('action.generateStartupScript'),
         autoRun: true,
         exec: async () => {
             return await actionStore.startup()
@@ -133,7 +149,7 @@ const startup = async () => {
 
 const unstartup = async () => {
     createTerminalResultBlade({
-        title: 'Generate unstartup script',
+        title: t('action.generateUnstartupScript'),
         autoRun: true,
         exec: async () => {
             return await actionStore.unstartup()
@@ -143,7 +159,7 @@ const unstartup = async () => {
 
 const save = async () => {
     createTerminalResultBlade({
-        title: 'Save processes',
+        title: t('action.saveProcesses'),
         autoRun: true,
         exec: async () => {
             return await actionStore.save()
@@ -153,7 +169,7 @@ const save = async () => {
 
 const resurrect = async () => {
     createTerminalResultBlade({
-        title: 'Resurrect processes',
+        title: t('action.resurrectProcesses'),
         autoRun: true,
         exec: async () => {
             return await actionStore.resurrect()
@@ -163,7 +179,7 @@ const resurrect = async () => {
 
 const kill = async () => {
     createTerminalResultBlade({
-        title: 'Kill the daemon',
+        title: t('action.killTheDaemon'),
         autoRun: true,
         exec: async () => {
             return await actionStore.kill()
@@ -173,7 +189,7 @@ const kill = async () => {
 
 const ping = async () => {
     createTerminalResultBlade({
-        title: 'Ping or start the PM2 daemon',
+        title: t('action.pingOrStartThePm2Daemon'),
         autoRun: true,
         exec: async () => {
             return await actionStore.ping()
@@ -183,7 +199,7 @@ const ping = async () => {
 
 const update = async () => {
     createTerminalResultBlade({
-        title: 'Update the in-memory PM2 daemon',
+        title: t('action.updateTheInMemoryPm2Daemon'),
         autoRun: true,
         exec: async () => {
             return await actionStore.update()

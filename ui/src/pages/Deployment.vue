@@ -2,13 +2,13 @@
     <div class="flex-1 divide-y divide-accented w-full">
         <TableCommonAction
             filter-prop="name"
-            filter-text="Filter name..."
+            :filter-text="$t('deployment.filterName')"
             :table="table">
             <UButton
                 color="primary"
                 icon="i-lucide-refresh-ccw"
                 variant="outline"
-                label="Refresh"
+                :label="$t('common.refresh')"
                 @click="refresh" />
         </TableCommonAction>
         <FullHeight>
@@ -19,20 +19,24 @@
                     :data="deploymentStore.deployments"
                     :columns="columns">
                     <template #email-header="{ column }">
-                        <SortableTableHeader :column="column" label="Email" />
+                        <SortableTableHeader
+                            :column="column"
+                            :label="$t('common.email')" />
                     </template>
                     <template #name-header="{ column }">
-                        <SortableTableHeader :column="column" label="Name" />
+                        <SortableTableHeader
+                            :column="column"
+                            :label="$t('common.name')" />
                     </template>
                     <template #createdAt-header="{ column }">
                         <SortableTableHeader
                             :column="column"
-                            label="Create Time" />
+                            :label="$t('deployment.createTime')" />
                     </template>
                     <template #updatedAt-header="{ column }">
                         <SortableTableHeader
                             :column="column"
-                            label="Update Time" />
+                            :label="$t('deployment.updateTime')" />
                     </template>
                     <template #repo-cell="{ row }">
                         <UTooltip :text="row.original.repo">
@@ -49,7 +53,7 @@
                             {{
                                 userStore.users.find(
                                     u => u.id === row.original.userId
-                                )?.displayName ?? 'Anonymous'
+                                )?.displayName ?? $t('common.anonymous')
                             }}
                         </ULink>
                         <UBadge
@@ -57,7 +61,7 @@
                             class="uppercase"
                             variant="subtle"
                             color="warning">
-                            Unmanaged
+                            {{ $t('common.unmanaged') }}
                         </UBadge>
                     </template>
                     <template #actions-cell="{ row }">
@@ -87,6 +91,7 @@
 
 <script setup>
 import { onMounted, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useClipboard } from '@vueuse/core'
 
 import { useUserStore } from '../stores/user.js'
@@ -107,6 +112,7 @@ import DeploymentBlade from '../components/Blades/DeploymentBlade.vue'
 const userStore = useUserStore()
 const deploymentStore = useDeploymentStore()
 const { copy } = useClipboard()
+const { t } = useI18n()
 
 onMounted(async () => {
     await deploymentStore.refresh()
@@ -115,7 +121,7 @@ onMounted(async () => {
 
 const refresh = async () => {
     if (await deploymentStore.refresh()) {
-        addSuccessfulToast('Refreshed successfully!')
+        addSuccessfulToast(t('toast.refreshedSuccessfully'))
     }
 }
 
@@ -130,15 +136,15 @@ const columns = [
     },
     {
         accessorKey: 'user',
-        header: 'User'
+        header: t('deployment.user')
     },
     {
         accessorKey: 'repo',
-        header: 'Repo'
+        header: t('deployment.repo')
     },
     {
         accessorKey: 'createdBy',
-        header: 'Created By'
+        header: t('deployment.createdBy')
     },
     {
         accessorKey: 'createdAt',
@@ -163,28 +169,28 @@ const getActions = row => {
     return [
         {
             type: 'label',
-            label: 'Actions'
+            label: t('common.actions')
         },
         {
-            label: 'Copy raw JSON',
+            label: t('deployment.copyRawJson'),
             icon: 'i-lucide-copy',
             onSelect() {
                 copy(deploymentStore.getJson(row.original))
-                addSuccessfulToast('Copied successfully!')
+                addSuccessfulToast(t('toast.copiedSuccessfully'))
             }
         },
         {
-            label: 'Delete item',
+            label: t('deployment.deleteItem'),
             icon: 'i-lucide-trash-2',
             async onSelect() {
                 if (await deploymentStore.deleteItem(row.original.id)) {
-                    addSuccessfulToast('Deleted successfully!')
+                    addSuccessfulToast(t('toast.deletedSuccessfully'))
                     await deploymentStore.refresh()
                 }
             }
         },
         {
-            label: 'Edit item',
+            label: t('deployment.editItem'),
             icon: 'i-lucide-edit-2',
             async onSelect() {
                 const { event, data } = await createCommonBlade(
@@ -204,18 +210,18 @@ const getActions = row => {
                         deploymentStore.fromViewObject(data)
                     )
                 ) {
-                    addSuccessfulToast('Updated successfully')
+                    addSuccessfulToast(t('toast.updatedSuccessfully'))
                     deploymentStore.refresh()
                 }
             }
         },
         {
-            label: 'Setup',
+            label: t('deployment.setup'),
             icon: 'i-lucide-cable',
             async onSelect() {
                 const id = row.original.id
                 createTerminalResultBlade({
-                    title: 'Setup',
+                    title: t('deployment.setup'),
                     value: null,
                     autoRun: true,
                     async exec() {
@@ -225,12 +231,12 @@ const getActions = row => {
             }
         },
         {
-            label: 'Deploy',
+            label: t('deployment.deploy'),
             icon: 'i-lucide-bus',
             async onSelect() {
                 const id = row.original.id
                 createTerminalResultBlade({
-                    title: 'Deploy',
+                    title: t('deployment.deploy'),
                     value: null,
                     autoRun: true,
                     async exec() {
@@ -240,12 +246,12 @@ const getActions = row => {
             }
         },
         {
-            label: 'Update',
+            label: t('deployment.update'),
             icon: 'i-lucide-calendar-sync',
             async onSelect() {
                 const id = row.original.id
                 createTerminalResultBlade({
-                    title: 'Update',
+                    title: t('deployment.update'),
                     value: null,
                     autoRun: true,
                     async exec() {
@@ -255,15 +261,15 @@ const getActions = row => {
             }
         },
         {
-            label: 'Revert',
+            label: t('deployment.revert'),
             icon: 'i-lucide-arrow-left',
             async onSelect() {
                 const id = row.original.id
                 createTerminalResultBlade({
-                    title: 'Revert',
+                    title: t('deployment.revert'),
                     value: {
                         type: 'number',
-                        label: 'Revert number',
+                        label: t('deployment.revertNumber'),
                         attrs: {
                             min: 1
                         }
@@ -276,12 +282,12 @@ const getActions = row => {
             }
         },
         {
-            label: 'View Current',
+            label: t('deployment.viewCurrent'),
             icon: 'i-lucide-calendar',
             async onSelect() {
                 const id = row.original.id
                 createTerminalResultBlade({
-                    title: 'View Current',
+                    title: t('deployment.viewCurrent'),
                     value: null,
                     autoRun: true,
                     async exec() {
@@ -291,12 +297,12 @@ const getActions = row => {
             }
         },
         {
-            label: 'View Previous',
+            label: t('deployment.viewPrevious'),
             icon: 'i-lucide-calendar-arrow-up',
             async onSelect() {
                 const id = row.original.id
                 createTerminalResultBlade({
-                    title: 'View Previous',
+                    title: t('deployment.viewPrevious'),
                     value: null,
                     autoRun: true,
                     async exec() {
@@ -306,15 +312,15 @@ const getActions = row => {
             }
         },
         {
-            label: 'Execute',
+            label: t('deployment.execute'),
             icon: 'i-lucide-square-function',
             async onSelect() {
                 const id = row.original.id
                 createTerminalResultBlade({
-                    title: 'Execute',
+                    title: t('deployment.execute'),
                     value: {
                         type: 'text',
-                        label: 'Command',
+                        label: t('deployment.command'),
                         attrs: {
                             placeholder: 'pwd'
                         }
@@ -327,12 +333,12 @@ const getActions = row => {
             }
         },
         {
-            label: 'List',
+            label: t('deployment.list'),
             icon: 'i-lucide-list',
             async onSelect() {
                 const id = row.original.id
                 createTerminalResultBlade({
-                    title: 'List',
+                    title: t('deployment.list'),
                     value: null,
                     autoRun: true,
                     async exec() {

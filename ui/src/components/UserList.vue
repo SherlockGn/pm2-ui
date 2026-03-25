@@ -5,7 +5,7 @@
                 color="primary"
                 icon="i-lucide-refresh-ccw"
                 variant="outline"
-                label="Refresh"
+                :label="$t('common.refresh')"
                 @click="refresh" />
         </TableCommonAction>
         <FullHeight>
@@ -16,27 +16,29 @@
                     :data="userStore.users"
                     :columns="columns">
                     <template #email-header="{ column }">
-                        <SortableTableHeader :column="column" label="Email" />
+                        <SortableTableHeader
+                            :column="column"
+                            :label="$t('user.email')" />
                     </template>
                     <template #displayName-header="{ column }">
                         <SortableTableHeader
                             :column="column"
-                            label="Display Name" />
+                            :label="$t('user.displayName')" />
                     </template>
                     <template #lastLogin-header="{ column }">
                         <SortableTableHeader
                             :column="column"
-                            label="Last Log In" />
+                            :label="$t('user.lastLogIn')" />
                     </template>
                     <template #createdAt-header="{ column }">
                         <SortableTableHeader
                             :column="column"
-                            label="Create Time" />
+                            :label="$t('user.createTime')" />
                     </template>
                     <template #updatedAt-header="{ column }">
                         <SortableTableHeader
                             :column="column"
-                            label="Update Time" />
+                            :label="$t('user.updateTime')" />
                     </template>
                     <template #email-cell="{ row }">
                         <span>{{ row.original.email }}</span>
@@ -48,7 +50,7 @@
                                 color="neutral"
                                 variant="outline"
                                 class="ml-3">
-                                Yourself
+                                {{ $t('user.yourself') }}
                             </UBadge>
                         </span>
                     </template>
@@ -110,6 +112,7 @@
 
 <script setup>
 import { onMounted, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useClipboard } from '@vueuse/core'
 
 import { useUserStore } from '../stores/user.js'
@@ -121,6 +124,7 @@ import TableCommonAction from './TableCommonAction.vue'
 import TableFilterResult from './TableFilterResult.vue'
 import FullHeight from './FullHeight.vue'
 
+const { t } = useI18n()
 const userStore = useUserStore()
 const { copy } = useClipboard()
 
@@ -130,19 +134,19 @@ onMounted(async () => {
 
 const refresh = async () => {
     if (await userStore.refresh()) {
-        addSuccessfulToast('Refreshed successfully!')
+        addSuccessfulToast(t('toast.refreshedSuccessfully'))
     }
 }
 
 const updateEnabled = async (id, enabled) => {
     if (await userStore.updateEnabled(id, enabled)) {
-        addSuccessfulToast('Updated successfully!')
+        addSuccessfulToast(t('toast.updatedSuccessfully'))
     }
 }
 
 const updateSuperUser = async (id, superUser) => {
     if (await userStore.updateSuperUser(id, superUser)) {
-        addSuccessfulToast('Updated successfully!')
+        addSuccessfulToast(t('toast.updatedSuccessfully'))
     }
 }
 
@@ -157,7 +161,7 @@ const columns = [
     },
     {
         accessorKey: 'avatar',
-        header: 'Avatar'
+        header: t('user.avatar')
     },
     {
         accessorKey: 'displayName',
@@ -165,11 +169,11 @@ const columns = [
     },
     {
         accessorKey: 'enabled',
-        header: 'Enabled'
+        header: t('user.enabled')
     },
     {
         accessorKey: 'superUser',
-        header: 'Super User'
+        header: t('user.superUser')
     },
     {
         accessorKey: 'lastLogin',
@@ -198,29 +202,29 @@ const getActions = row => {
     return [
         {
             type: 'label',
-            label: 'Actions'
+            label: t('common.actions')
         },
         {
-            label: 'Copy raw JSON',
+            label: t('user.copyRawJson'),
             icon: 'i-lucide-copy',
             onSelect() {
                 copy(JSON.stringify(row.original))
-                addSuccessfulToast('Copied successfully!')
+                addSuccessfulToast(t('toast.copiedSuccessfully'))
             }
         },
         {
-            label: 'Delete item',
+            label: t('user.deleteItem'),
             icon: 'i-lucide-trash-2',
             disabled: row.original.id === userStore.currentUser?.id,
             async onSelect() {
                 if (await userStore.deleteItem(row.original.id)) {
-                    addSuccessfulToast('Deleted successfully!')
+                    addSuccessfulToast(t('toast.deletedSuccessfully'))
                     await userStore.refresh()
                 }
             }
         },
         {
-            label: 'Edit item',
+            label: t('user.editItem'),
             icon: 'i-lucide-edit-2',
             async onSelect() {
                 const { event, data } = await createCommonBlade(UserBlade, {
@@ -234,7 +238,7 @@ const getActions = row => {
                     delete data.user.password
                 }
                 if (await userStore.updateUser(data.user)) {
-                    addSuccessfulToast('Updated successfully!')
+                    addSuccessfulToast(t('toast.updatedSuccessfully'))
                     await userStore.refresh()
                 }
             }

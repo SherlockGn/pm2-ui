@@ -12,8 +12,8 @@
                 <h2 class="text-highlighted font-semibold">
                     {{
                         props.mode === 'create'
-                            ? 'Create deployment'
-                            : 'Update deployment'
+                            ? $t('deploymentBlade.createDeployment')
+                            : $t('deploymentBlade.updateDeployment')
                     }}
                 </h2>
 
@@ -30,29 +30,32 @@
                     class="space-y-4 flex flex-col h-[85vh]"
                     @submit="onSubmit">
                     <div class="h-[calc(100vh-5rem)] overflow-y-auto">
-                        <UFormField label="Name" name="name" class="mb-5">
+                        <UFormField
+                            :label="$t('deploymentBlade.name')"
+                            name="name"
+                            class="mb-5">
                             <UInput v-model="deployment.name" class="w-100" />
                         </UFormField>
 
                         <UFormField
-                            label="Key"
-                            description="SSH key path"
+                            :label="$t('deploymentBlade.key')"
+                            :description="$t('deploymentBlade.sshKeyPath')"
                             name="key"
                             class="mb-5">
                             <UInput v-model="deployment.key" class="w-100" />
                         </UFormField>
 
                         <UFormField
-                            label="User"
-                            description="SSH user"
+                            :label="$t('deploymentBlade.user')"
+                            :description="$t('deploymentBlade.sshUser')"
                             name="user"
                             class="mb-5">
                             <UInput v-model="deployment.user" class="w-100" />
                         </UFormField>
 
                         <UFormField
-                            label="Hosts"
-                            description="SSH hosts"
+                            :label="$t('deploymentBlade.hosts')"
+                            :description="$t('deploymentBlade.sshHosts')"
                             name="host"
                             class="mb-5">
                             <StringList
@@ -61,8 +64,10 @@
                         </UFormField>
 
                         <UFormField
-                            label="SSH options"
-                            description="SSH options with no command-line flag, see 'man ssh'"
+                            :label="$t('deploymentBlade.sshOptions')"
+                            :description="
+                                $t('deploymentBlade.sshOptionsDescription')
+                            "
                             name="sshOptions"
                             class="mb-5">
                             <StringList
@@ -71,32 +76,34 @@
                         </UFormField>
 
                         <UFormField
-                            label="Ref"
-                            description="GIT remote/branch"
+                            :label="$t('deploymentBlade.ref')"
+                            :description="$t('deploymentBlade.gitRemoteBranch')"
                             name="ref"
                             class="mb-5">
                             <UInput v-model="deployment.ref" class="w-100" />
                         </UFormField>
 
                         <UFormField
-                            label="Repo"
-                            description="GIT remote"
+                            :label="$t('deploymentBlade.repo')"
+                            :description="$t('deploymentBlade.gitRemote')"
                             name="repo"
                             class="mb-5">
                             <UInput v-model="deployment.repo" class="w-100" />
                         </UFormField>
 
                         <UFormField
-                            label="Path"
-                            description="path in the server"
+                            :label="$t('deploymentBlade.path')"
+                            :description="$t('deploymentBlade.pathInTheServer')"
                             name="path"
                             class="mb-5">
                             <UInput v-model="deployment.path" class="w-100" />
                         </UFormField>
 
                         <UFormField
-                            label="Pre-Setup"
-                            description="Pre-setup command or path to a script on your local machine"
+                            :label="$t('deploymentBlade.preSetup')"
+                            :description="
+                                $t('deploymentBlade.preSetupDescription')
+                            "
                             name="preSetup"
                             class="mb-5">
                             <UInput
@@ -105,8 +112,10 @@
                         </UFormField>
 
                         <UFormField
-                            label="Post-Setup"
-                            description="Post-setup commands or path to a script on the host machine"
+                            :label="$t('deploymentBlade.postSetup')"
+                            :description="
+                                $t('deploymentBlade.postSetupDescription')
+                            "
                             name="postSetup"
                             class="mb-5">
                             <UInput
@@ -115,8 +124,10 @@
                         </UFormField>
 
                         <UFormField
-                            label="Pre-Deploy Action"
-                            description="pre-deploy action"
+                            :label="$t('deploymentBlade.preDeployAction')"
+                            :description="
+                                $t('deploymentBlade.preDeployActionDescription')
+                            "
                             name="preDeployLocal"
                             class="mb-5">
                             <UInput
@@ -125,8 +136,12 @@
                         </UFormField>
 
                         <UFormField
-                            label="Post-Deploy Action"
-                            description="post-deploy action"
+                            :label="$t('deploymentBlade.postDeployAction')"
+                            :description="
+                                $t(
+                                    'deploymentBlade.postDeployActionDescription'
+                                )
+                            "
                             name="postDeploy"
                             class="mb-5">
                             <UInput
@@ -135,7 +150,9 @@
                         </UFormField>
                     </div>
                     <div class="mt-auto mb-20">
-                        <UButton type="submit" class="">Submit</UButton>
+                        <UButton type="submit" class="">
+                            {{ $t('common.submit') }}
+                        </UButton>
                     </div>
                 </UForm>
             </div>
@@ -145,7 +162,10 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import StringList from '../StringList.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
     open: Boolean,
@@ -163,22 +183,22 @@ const deployment = ref(props.initVal)
 function validate(state) {
     const errors = []
     if (!state.name) {
-        errors.push({ name: 'name', message: 'Required' })
+        errors.push({ name: 'name', message: t('common.required') })
     }
     if (!state.user) {
-        errors.push({ name: 'user', message: 'Required' })
+        errors.push({ name: 'user', message: t('common.required') })
     }
     if (!state.host.length) {
-        errors.push({ name: 'host', message: 'Required' })
+        errors.push({ name: 'host', message: t('common.required') })
     }
     if (!state.repo) {
-        errors.push({ name: 'repo', message: 'Required' })
+        errors.push({ name: 'repo', message: t('common.required') })
     }
     if (!state.ref) {
-        errors.push({ name: 'ref', message: 'Required' })
+        errors.push({ name: 'ref', message: t('common.required') })
     }
     if (!state.path) {
-        errors.push({ name: 'path', message: 'Required' })
+        errors.push({ name: 'path', message: t('common.required') })
     }
     return errors
 }

@@ -7,12 +7,12 @@
             <div
                 class="p-4 border-b border-gray-100 flex justify-between items-center bg-white">
                 <h2 class="font-bold text-gray-400 tracking-widest">
-                    Profiles
+                    {{ $t('environmentProfiles.profiles') }}
                 </h2>
                 <button
                     @click.prevent="addProfile"
                     class="p-1 hover:bg-emerald-50 text-primary rounded"
-                    title="New Profile">
+                    :title="$t('environmentProfiles.newProfile')">
                     <UIcon name="i-lucide-plus"></UIcon>
                 </button>
             </div>
@@ -48,7 +48,7 @@
                         <button
                             @click.prevent="duplicateProfile(profile)"
                             class="p-1 text-gray-400 hover:text-blue-500"
-                            title="Duplicate Profile">
+                            :title="$t('environmentProfiles.duplicateProfile')">
                             <UIcon name="i-lucide-copy"></UIcon>
                         </button>
                         <button
@@ -76,14 +76,14 @@
                             Active
                         </span>
                         <span class="text-[10px] text-gray-400 tracking-tight">
-                            Environment Variables
+                            {{ $t('environmentProfiles.environmentVariables') }}
                         </span>
                     </div>
                 </div>
                 <button
                     @click.prevent="addEnv"
                     class="bg-primary-500 hover:bg-primary-600 text-white text-sm px-4 py-2 rounded-lg font-semibold shadow-md transition-all">
-                    + Add Variable
+                    {{ $t('environmentProfiles.addVariable') }}
                 </button>
             </div>
 
@@ -106,7 +106,9 @@
                         <button
                             @click.prevent="syncVariable(env)"
                             class="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded"
-                            title="Sync to all profiles">
+                            :title="
+                                $t('environmentProfiles.syncToAllProfiles')
+                            ">
                             <UIcon name="i-lucide-arrow-left-right"></UIcon>
                         </button>
                         <button
@@ -120,14 +122,14 @@
                     v-if="currentProfile.env.length === 0"
                     class="text-center py-20 border-2 border-dashed border-gray-100 rounded-xl">
                     <p class="text-gray-400 text-sm">
-                        No variables in this profile.
+                        {{ $t('environmentProfiles.noVariablesInThisProfile') }}
                     </p>
                 </div>
             </div>
             <details class="mt-auto border-t border-gray-100">
                 <summary
                     class="px-6 py-2 text-[10px] font-bold text-gray-400 cursor-pointer hover:bg-gray-50 transition-colors">
-                    JSON State (Testing)
+                    {{ $t('environmentProfiles.jsonStateTesting') }}
                 </summary>
                 <pre
                     class="p-4 text-[10px] bg-gray-900 text-emerald-400 overflow-x-auto h-40"

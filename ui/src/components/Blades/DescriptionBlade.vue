@@ -21,6 +21,9 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
     open: Boolean,
@@ -42,7 +45,7 @@ const data = computed(() => {
     return [
         {
             id: 'basic',
-            label: 'Basic Information',
+            label: t('descriptionBlade.basicInformation'),
             items: Object.entries(process.value)
                 .filter(i => typeof i[1] !== 'object')
                 .map(i => {
@@ -54,7 +57,7 @@ const data = computed(() => {
         },
         {
             id: 'attr',
-            label: 'Attributes',
+            label: t('descriptionBlade.attributes'),
             items: process.value.attrs.map(i => {
                 return {
                     label: i.key,
@@ -64,17 +67,17 @@ const data = computed(() => {
         },
         {
             id: 'rpc',
-            label: 'RPCs',
+            label: t('descriptionBlade.rpcs'),
             items: process.value.rpc.map(i => {
                 return {
                     label: i.name,
-                    suffix: i.isBuiltIn ? 'builtIn' : ''
+                    suffix: i.isBuiltIn ? t('descriptionBlade.builtIn') : ''
                 }
             })
         },
         {
             id: 'metrics',
-            label: 'Metrics',
+            label: t('descriptionBlade.metrics'),
             items: process.value.metrics.map(i => {
                 return {
                     label: i.name,
@@ -84,7 +87,7 @@ const data = computed(() => {
         },
         {
             id: 'customEnv',
-            label: 'Custom Environment Variables',
+            label: t('descriptionBlade.customEnvironmentVariables'),
             items: process.value.env.custom.map(i => {
                 return {
                     label: i.key,
@@ -94,7 +97,7 @@ const data = computed(() => {
         },
         {
             id: 'commonEnv',
-            label: 'Common Environment Variables',
+            label: t('descriptionBlade.commonEnvironmentVariables'),
             items: process.value.env.common.map(i => {
                 return {
                     label: i.key,

@@ -32,7 +32,7 @@
             <div
                 v-if="configs.length === 0"
                 class="py-20 text-center border-2 border-dashed border-slate-100 rounded-2xl text-slate-400 italic text-sm">
-                No active streams.
+                {{ $t('logMonitor.noActiveStreams') }}
             </div>
         </div>
     </div>

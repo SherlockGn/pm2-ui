@@ -1,10 +1,10 @@
 <template>
     <div class="flex">
         <ProcessSelector v-model="selected"></ProcessSelector>
-        <UFormField label="Line count" class="ml-20">
+        <UFormField :label="$t('log.lineCount')" class="ml-20">
             <UInputNumber :min="1" v-model="count"></UInputNumber>
         </UFormField>
-        <UFormField label="Auto refresh" class="ml-20">
+        <UFormField :label="$t('log.autoRefresh')" class="ml-20">
             <USwitch v-model="autoRefresh"></USwitch>
         </UFormField>
     </div>
@@ -13,7 +13,7 @@
             color="primary"
             icon="i-lucide-refresh-ccw"
             variant="outline"
-            label="Refresh log"
+            :label="$t('log.refreshLog')"
             @click="triggerManualSync" />
     </UFormField>
     <div class="h-full overflow-y-auto">
@@ -29,9 +29,12 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import LogMonitor from '../components/LogMonitor.vue'
 import ProcessSelector from '../components/ProcessSelector.vue'
+
+const { t } = useI18n()
 
 const manualSignal = ref(0)
 const selected = ref(null)
@@ -45,19 +48,19 @@ const logPathValid = path => path && path !== 'NULL' && path !== '/dev/null'
 const allConfigs = computed(() => {
     return [
         {
-            title: 'StdOut',
+            title: t('log.stdOut'),
             path: selected.value?.attrs?.find(i => i.key === 'pm_out_log_path')
                 ?.value,
             key: 'output'
         },
         {
-            title: 'StdErr',
+            title: t('log.stdErr'),
             path: selected.value?.attrs?.find(i => i.key === 'pm_err_log_path')
                 ?.value,
             key: 'error'
         },
         {
-            title: 'Combined',
+            title: t('log.combined'),
             path: selected.value?.attrs?.find(i => i.key === 'pm_log_path')
                 ?.value,
             key: 'combined'

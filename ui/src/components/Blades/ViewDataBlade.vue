@@ -10,7 +10,7 @@
         <template #body>
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
                 <h2 class="text-highlighted font-semibold">
-                    Remote Procedure Call (RPC)
+                    {{ $t('viewDataBlade.title') }}
                 </h2>
                 <UButton
                     color="neutral"
@@ -20,16 +20,18 @@
             </div>
             <div class="w-200 p-2">
                 <UForm class="space-y-4 flex flex-col h-[80vh]">
-                    <UFormField label="Data">
+                    <UFormField :label="$t('viewDataBlade.data')">
                         <Json5
                             v-if="dataString !== ''"
                             v-model="dataString"
                             :readonly="true"
                             class="w-120" />
-                        <UKbd v-else>Undefined</UKbd>
+                        <UKbd v-else>{{ $t('viewDataBlade.undefined') }}</UKbd>
                     </UFormField>
 
-                    <UFormField label="Response" v-if="rspString !== ''">
+                    <UFormField
+                        :label="$t('viewDataBlade.response')"
+                        v-if="rspString !== ''">
                         <Json5
                             v-model="rspString"
                             :readonly="true"

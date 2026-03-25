@@ -23,7 +23,9 @@
     <div class="relative">
         <div class="flex group">
             <UInput
-                :placeholder="props.placeholder"
+                :placeholder="
+                    props.placeholder || t('fileSelector.selectAFile')
+                "
                 class="w-100"
                 :value="modelValue"
                 @blur="emitFormBlur()"
@@ -78,7 +80,7 @@
                         <div class="spinner mb-2"></div>
                         <span
                             class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                            Accessing File System...
+                            {{ $t('fileSelector.accessingFileSystem') }}
                         </span>
                     </div>
 
@@ -91,7 +93,8 @@
                             <UIcon
                                 name="i-lucide-folder-dot"
                                 class="text-primary" />
-                            <span class="text-sm font-medium text-slate-700 hidden [display:block] min-[900px]:block">
+                            <span
+                                class="text-sm font-medium text-slate-700 hidden [display:block] min-[900px]:block">
                                 {{ f }}
                             </span>
                         </div>
@@ -118,15 +121,15 @@
                     class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
                     <div
                         class="text-[10px] font-mono text-slate-400 truncate max-w-[280px]">
-                        Preview: {{ sep === '/' ? '/' : ''
-                        }}{{ buffer.join(sep)
+                        {{ $t('fileSelector.preview') }}
+                        {{ sep === '/' ? '/' : '' }}{{ buffer.join(sep)
                         }}{{ selectedFile ? sep + selectedFile : '' }}
                     </div>
                     <div class="flex gap-3">
                         <button
                             @click.prevent="isOpen = false"
                             class="text-xs font-bold text-slate-500 hover:text-slate-700 transition-colors">
-                            Cancel
+                            {{ $t('fileSelector.cancel') }}
                         </button>
                         <button
                             @click.prevent="confirm"
@@ -138,8 +141,8 @@
                             class="bg-primary hover:bg-primary-700 disabled:opacity-40 text-white px-5 py-2 rounded-lg transition-all shadow-md">
                             {{
                                 props.type === 'file'
-                                    ? 'Confirm'
-                                    : 'Select this folder'
+                                    ? $t('fileSelector.confirm')
+                                    : $t('fileSelector.selectThisFolder')
                             }}
                         </button>
                     </div>
@@ -150,6 +153,9 @@
 </template>
 <script setup>
 import { ref, reactive, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
     modelValue: {
@@ -166,7 +172,7 @@ const props = defineProps({
     },
     placeholder: {
         type: String,
-        default: 'Select a file'
+        default: ''
     },
     walk: {
         type: Function,

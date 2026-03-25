@@ -12,8 +12,8 @@
                 <h2 class="text-highlighted font-semibold">
                     {{
                         props.mode === 'create'
-                            ? 'Create backup'
-                            : 'Update backup'
+                            ? $t('backupBlade.createBackup')
+                            : $t('backupBlade.updateBackup')
                     }}
                 </h2>
                 <UButton
@@ -26,12 +26,14 @@
                 <UForm
                     class="space-y-4 flex flex-col h-[80vh]"
                     @submit="onSubmit">
-                    <UFormField label="Backup name">
+                    <UFormField :label="$t('backupBlade.backupName')">
                         <UInput v-model="name" class="w-64" />
                     </UFormField>
 
                     <div class="mt-auto mb-20">
-                        <UButton type="submit" class="">Submit</UButton>
+                        <UButton type="submit" class="">
+                            {{ $t('common.submit') }}
+                        </UButton>
                     </div>
                 </UForm>
             </div>
@@ -41,6 +43,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
     open: Boolean,

@@ -42,12 +42,15 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useColorMode } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '../stores/user.js'
+import { availableLocales, setLocale } from '../i18n.js'
 
 defineProps({
     collapsed: Boolean
 })
 
+const { t, locale } = useI18n()
 const colorMode = useColorMode()
 const appConfig = useAppConfig()
 const userStore = useUserStore()
@@ -97,7 +100,20 @@ const items = computed(() => [
     ],
     [
         {
-            label: 'Theme',
+            label: t('userMenu.language'),
+            icon: 'i-lucide-languages',
+            children: availableLocales.map(loc => ({
+                label: loc.label,
+                type: 'checkbox',
+                checked: locale.value === loc.value,
+                onSelect(e) {
+                    e.preventDefault()
+                    setLocale(loc.value)
+                }
+            }))
+        },
+        {
+            label: t('userMenu.theme'),
             icon: 'i-lucide-palette',
             children: colors.map(color => ({
                 label: color,
@@ -112,11 +128,11 @@ const items = computed(() => [
             }))
         },
         {
-            label: 'Appearance',
+            label: t('userMenu.appearance'),
             icon: 'i-lucide-sun-moon',
             children: [
                 {
-                    label: 'Light',
+                    label: t('userMenu.light'),
                     icon: 'i-lucide-sun',
                     type: 'checkbox',
                     checked: colorMode.value === 'light',
@@ -126,7 +142,7 @@ const items = computed(() => [
                     }
                 },
                 {
-                    label: 'Dark',
+                    label: t('userMenu.dark'),
                     icon: 'i-lucide-moon',
                     type: 'checkbox',
                     checked: colorMode.value === 'dark',
@@ -144,7 +160,7 @@ const items = computed(() => [
     ],
     [
         {
-            label: 'Log out',
+            label: t('userMenu.logOut'),
             icon: 'i-lucide-log-out',
             onSelect: () => {
                 router.push({ name: 'login' })

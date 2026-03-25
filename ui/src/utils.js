@@ -1,9 +1,12 @@
 import { render, h, ref, toRaw } from 'vue'
 import TerminalResultBlade from './components/Blades/TerminalResultBlade.vue'
+import { i18n } from './i18n.js'
+
+const t = key => i18n.global.t(key)
 
 export const formatDate = date => {
     if (!date) {
-        return 'N/A'
+        return t('common.na')
     }
     return new Date(date).toLocaleString('en-US', {
         day: 'numeric',
@@ -23,42 +26,42 @@ export const toFriendlyPeriod = milliseconds => {
     const days = Math.floor(hours / 24)
 
     if (days > 0) {
-        return `${days} day${days > 1 ? 's' : ''}`
+        return `${days} ${days > 1 ? t('utils.days') : t('utils.day')}`
     }
 
     if (hours > 0) {
-        return `${hours} hour${hours > 1 ? 's' : ''}`
+        return `${hours} ${hours > 1 ? t('utils.hours') : t('utils.hour')}`
     }
 
     if (minutes > 0) {
-        return `${minutes} minute${minutes > 1 ? 's' : ''}`
+        return `${minutes} ${minutes > 1 ? t('utils.minutes') : t('utils.minute')}`
     }
 
-    return `${seconds} second${seconds > 1 ? 's' : ''}`
+    return `${seconds} ${seconds > 1 ? t('utils.seconds') : t('utils.second')}`
 }
 
 export const toFriendlyMemory = bytes => {
     if (bytes == null) {
-        return 'N/A'
+        return t('common.na')
     }
 
     if (bytes < 1024) {
-        return `${bytes} B`
+        return `${bytes} ${t('utils.memoryUnits.b')}`
     }
 
     const kilobytes = bytes / 1024
     if (kilobytes < 1024) {
-        return `${kilobytes.toFixed(2)} KB`
+        return `${kilobytes.toFixed(2)} ${t('utils.memoryUnits.kb')}`
     }
 
     const megabytes = kilobytes / 1024
 
     if (megabytes < 1024) {
-        return `${megabytes.toFixed(2)} MB`
+        return `${megabytes.toFixed(2)} ${t('utils.memoryUnits.mb')}`
     }
 
     const gigabytes = megabytes / 1024
-    return `${gigabytes.toFixed(2)} GB`
+    return `${gigabytes.toFixed(2)} ${t('utils.memoryUnits.gb')}`
 }
 
 export const addSuccessfulToast = message => {

@@ -1,8 +1,8 @@
 <template>
     <div class="px-4 py-3.5 text-sm text-muted">
         {{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }}
-        of
-        {{ props.total }} row(s) filtered.
+        {{ $t('tableFilterResult.of') }}
+        {{ props.total }} {{ $t('tableFilterResult.rowsFiltered') }}
     </div>
 </template>
 

@@ -10,7 +10,7 @@
                         avatar: {
                             src: 'app.svg'
                         },
-                        label: collapsed ? undefined : 'PM2 UI'
+                        label: collapsed ? undefined : $t('dashboard.appName')
                     }"
                     color="neutral"
                     variant="ghost"
@@ -41,13 +41,13 @@
             :groups="[
                 {
                     id: 'navigators',
-                    label: 'Go to ...',
+                    label: $t('dashboard.goTo'),
                     items: navigators.map(i => i.children).flat()
                 }
             ]" />
         <UDashboardPanel>
             <template #header>
-                <UDashboardNavbar :title="toTitleCase(route.name)">
+                <UDashboardNavbar :title="routeTitle">
                     <template #leading>
                         <UDashboardSidebarCollapse />
                     </template>
@@ -71,8 +71,9 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 import { useUserStore } from '../stores/user.js'
 import { useAppStore } from '../stores/app.js'
@@ -88,6 +89,7 @@ import DeploymentBlade from '../components/Blades/DeploymentBlade.vue'
 
 import { createCommonBlade, addSuccessfulToast } from '../utils.js'
 
+const { t } = useI18n()
 const route = useRoute()
 const userStore = useUserStore()
 const appStore = useAppStore()
@@ -102,95 +104,95 @@ onMounted(async () => {
     await kvStore.refresh()
 })
 
-const toTitleCase = str =>
-    str
-        .replace(/([A-Z])/g, ' $1')
-        .replace(/^./, firstChar => firstChar.toUpperCase())
-        .trim()
+const routeTitle = computed(() => {
+    const name = route.name
+    const key = `dashboard.nav.${name}`
+    return t(key)
+})
 
-const navigators = [
+const navigators = computed(() => [
     {
-        label: 'Home',
+        label: t('dashboard.nav.home'),
         icon: 'i-lucide-house',
         defaultOpen: true,
         children: [
             {
-                label: 'Management',
+                label: t('dashboard.nav.management'),
                 icon: 'i-lucide-app-window-mac',
                 to: '/management'
             },
             {
-                label: 'Logs',
+                label: t('dashboard.nav.logs'),
                 icon: 'i-lucide-file-text',
                 to: '/logs'
             },
             {
-                label: 'Metric',
+                label: t('dashboard.nav.metric'),
                 icon: 'i-lucide-chart-line',
                 to: '/metric'
             },
             {
-                label: 'Communication',
+                label: t('dashboard.nav.communication'),
                 icon: 'i-lucide-message-square-share',
                 to: '/communication'
             },
             {
-                label: 'Deployment',
+                label: t('dashboard.nav.deployment'),
                 icon: 'i-lucide-server',
                 to: '/deployment'
             },
             {
-                label: 'Action',
+                label: t('dashboard.nav.action'),
                 icon: 'i-lucide-biceps-flexed',
                 to: '/action'
             },
             {
-                label: 'Backup',
+                label: t('dashboard.nav.backup'),
                 icon: 'i-lucide-send-to-back',
                 to: '/backup'
             }
         ]
     },
     {
-        label: 'Settings',
+        label: t('dashboard.nav.settings'),
         icon: 'i-lucide-settings',
         defaultOpen: true,
         children: [
             {
-                label: 'General',
+                label: t('dashboard.nav.general'),
                 icon: 'i-lucide-settings-2',
                 to: '/general'
             },
             {
-                label: 'Security',
+                label: t('dashboard.nav.security'),
                 icon: 'i-lucide-lock-keyhole',
                 to: '/security'
             },
             {
-                label: 'Database',
+                label: t('dashboard.nav.database'),
                 icon: 'i-lucide-database',
                 to: '/database'
             }
         ]
     },
     {
-        label: 'Administration',
+        label: t('dashboard.nav.administration'),
         icon: 'i-lucide-chess-king',
         defaultOpen: true,
         children: [
             {
-                label: 'Admin Log',
+                label: t('dashboard.nav.adminLog'),
                 icon: 'i-lucide-logs',
                 to: '/adminLog'
             },
             {
-                label: 'User',
+                label: t('dashboard.nav.user'),
                 icon: 'i-lucide-circle-user',
                 to: '/user'
             }
         ]
     }
-]
+])
 
 const addUser = async () => {
     const { event, data } = await createCommonBlade(UserBlade, {
@@ -200,7 +202,7 @@ const addUser = async () => {
         return
     }
     if (await userStore.createUser(data.user)) {
-        addSuccessfulToast('Created successfully')
+        addSuccessfulToast(t('toast.createdSuccessfully'))
         await userStore.refresh()
     }
 }
@@ -215,7 +217,7 @@ const addProcess = async () => {
     }
     const willStart = event === 'submit'
     if (await processStore.create(appStore.fromUIObjectApp(data), willStart)) {
-        addSuccessfulToast('Created successfully!')
+        addSuccessfulToast(t('toast.createdSuccessfully'))
         processStore.refresh()
     }
 }
@@ -228,7 +230,7 @@ const addDeployment = async () => {
         return
     }
     if (await deploymentStore.create(data)) {
-        addSuccessfulToast('Created successfully')
+        addSuccessfulToast(t('toast.createdSuccessfully'))
         deploymentStore.refresh()
     }
 }

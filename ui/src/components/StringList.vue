@@ -3,15 +3,14 @@
         class="max-w-md bg-white border border-gray-200 rounded-md shadow-sm overflow-hidden">
         <div
             class="flex items-center justify-between px-3 py-2 border-b border-gray-100 bg-gray-50/50">
-            <h2
-                class="text-xs font-bold text-gray-500 tracking-tight">
-                Items ({{ list.length }})
+            <h2 class="text-xs font-bold text-gray-500 tracking-tight">
+                {{ $t('stringList.items') }} ({{ list.length }})
             </h2>
             <button
                 @click.prevent="add"
                 class="text-xs font-medium text-primary hover:text-primary-700 flex items-center gap-1">
                 <UIcon name="i-lucide-plus" />
-                Add
+                {{ $t('stringList.add') }}
             </button>
         </div>
 
@@ -26,7 +25,7 @@
                 <input
                     v-model="list[index]"
                     type="text"
-                    placeholder="Value..."
+                    placeholder="Value.."
                     class="flex-1 bg-transparent border-none text-sm px-2 py-1 outline-none focus:ring-0 placeholder-gray-300" />
                 <button
                     @click.prevent="remove(index)"
@@ -37,7 +36,7 @@
             <div
                 v-if="list.length === 0"
                 class="p-4 text-center text-xs text-gray-400">
-                List is empty.
+                {{ $t('stringList.listIsEmpty') }}
             </div>
         </div>
     </div>

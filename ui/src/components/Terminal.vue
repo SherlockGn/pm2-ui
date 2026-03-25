@@ -7,7 +7,9 @@
                 <div class="w-2 h-2 rounded-full bg-slate-200"></div>
                 <div class="w-2 h-2 rounded-full bg-slate-200"></div>
             </div>
-            <span class="text-[9px] font-bold">Process Inspector</span>
+            <span class="text-[9px] font-bold">
+                {{ $t('terminal.processInspector') }}
+            </span>
         </div>
 
         <div
@@ -24,26 +26,26 @@
                     <span
                         v-if="modelValue.code === 0 && !modelValue.timeout"
                         class="px-2 py-0.5 rounded text-[9px] font-black bg-emerald-100 text-emerald-700 uppercase">
-                        Success
+                        {{ $t('terminal.success') }}
                     </span>
 
                     <span
                         v-else-if="modelValue.timeout"
                         class="px-2 py-0.5 rounded text-[9px] font-black bg-amber-100 text-amber-700 uppercase">
-                        Timeout
+                        {{ $t('terminal.timeout') }}
                     </span>
 
                     <span
                         v-else
                         class="px-2 py-0.5 rounded text-[9px] font-black bg-rose-100 text-rose-700 uppercase">
-                        Exit Code: {{ modelValue.code }}
+                        {{ $t('terminal.exitCode') }} {{ modelValue.code }}
                     </span>
                 </div>
             </div>
 
             <span
                 class="text-[9px] font-bold text-slate-300 uppercase tracking-widest font-mono">
-                {{ modelValue.ret.length }} Chunks
+                {{ modelValue.ret.length }} {{ $t('terminal.chunks') }}
             </span>
         </div>
     </div>

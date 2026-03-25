@@ -13,6 +13,9 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
     modelValue: Number
@@ -20,13 +23,13 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const units = [
-    { id: 'day', label: 'Days' },
-    { id: 'hour', label: 'Hours' },
-    { id: 'minute', label: 'Minutes' },
-    { id: 'second', label: 'Seconds' },
-    { id: 'millisecond', label: 'Milliseconds' }
-]
+const units = computed(() => [
+    { id: 'day', label: t('dateTimePeriod.days') },
+    { id: 'hour', label: t('dateTimePeriod.hours') },
+    { id: 'minute', label: t('dateTimePeriod.minutes') },
+    { id: 'second', label: t('dateTimePeriod.seconds') },
+    { id: 'millisecond', label: t('dateTimePeriod.milliseconds') }
+])
 
 const getBestDisplay = value => {
     if (value % 1000 != 0) {

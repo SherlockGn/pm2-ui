@@ -5,11 +5,13 @@
             color="primary"
             icon="i-lucide-refresh-ccw"
             variant="outline"
-            label="Refresh"
+            :label="$t('common.refresh')"
             @click="refreshSettings" />
-        <UFormField label="Regenerate JWT private key" class="mt-5 ml-5">
+        <UFormField
+            :label="$t('security.regenerateJwtPrivateKey')"
+            class="mt-5 ml-5">
             <UBadge variant="subtle" color="warning" class="mt-3">
-                This forces existing users logging out
+                {{ $t('security.thisForcesExistingUsersLoggingOut') }}
             </UBadge>
             <div class="mt-3">
                 <UButton
@@ -17,13 +19,13 @@
                     color="primary"
                     variant="outline"
                     icon="i-lucide-key">
-                    Regenerate
+                    {{ $t('security.regenerate') }}
                 </UButton>
             </div>
         </UFormField>
-        <UFormField label="Token expiration" class="mt-5 ml-5">
+        <UFormField :label="$t('security.tokenExpiration')" class="mt-5 ml-5">
             <UBadge variant="subtle" color="warning" class="mt-3">
-                Logged in users are not affected
+                {{ $t('security.loggedInUsersAreNotAffected') }}
             </UBadge>
             <div class="mt-3">
                 <DateTimePeriod
@@ -36,9 +38,9 @@
                 variant="outline"
                 icon="i-lucide-save"></UButton>
         </UFormField>
-        <UFormField label="Enable CORS" class="mt-5 ml-5">
+        <UFormField :label="$t('security.enableCors')" class="mt-5 ml-5">
             <UBadge variant="subtle" color="warning" class="mt-3">
-                Will take effect after restart server
+                {{ $t('security.willTakeEffectAfterRestartServer') }}
             </UBadge>
             <div class="mt-3">
                 <USwitch
@@ -51,6 +53,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useKvStore } from '../stores/kv.js'
 import { addSuccessfulToast } from '../utils.js'
 
@@ -58,29 +61,30 @@ import StringList from '../components/StringList.vue'
 import DateTime from '../components/DateTime.vue'
 import DateTimePeriod from '../components/DateTimePeriod.vue'
 
+const { t } = useI18n()
 const kvStore = useKvStore()
 
 const updateJwtKey = async () => {
     if (await kvStore.updateJwtKey()) {
-        addSuccessfulToast('Updated successfully!')
+        addSuccessfulToast(t('toast.updatedSuccessfully'))
     }
 }
 
 const updateTokenExpireTime = async () => {
     if (await kvStore.updateTokenExpireTime(kvStore.settings.tokenExpireTime)) {
-        addSuccessfulToast('Updated successfully!')
+        addSuccessfulToast(t('toast.updatedSuccessfully'))
     }
 }
 
 const updateEnableCors = async () => {
     if (await kvStore.updateEnableCors(kvStore.settings.enableCors)) {
-        addSuccessfulToast('Updated successfully!')
+        addSuccessfulToast(t('toast.updatedSuccessfully'))
     }
 }
 
 const refreshSettings = async () => {
     if (await kvStore.refresh()) {
-        addSuccessfulToast('Refreshed successfully!')
+        addSuccessfulToast(t('toast.refreshedSuccessfully'))
     }
 }
 </script>

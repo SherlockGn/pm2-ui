@@ -4,12 +4,12 @@
             <TableCommonAction
                 :table="table"
                 filter-prop="name"
-                filter-text="Filter name...">
+                :filter-text="$t('backup.name')">
                 <UButton
                     color="primary"
                     icon="i-lucide-refresh-ccw"
                     variant="outline"
-                    label="Refresh"
+                    :label="$t('common.refresh')"
                     @click="refresh" />
             </TableCommonAction>
             <UButton
@@ -17,14 +17,14 @@
                 color="primary"
                 icon="i-lucide-database-backup"
                 variant="outline"
-                label="Create backup"
+                :label="$t('backup.createBackup')"
                 @click="startBackup" />
             <UButton
                 class="ml-4"
                 color="primary"
                 icon="i-lucide-hard-drive-upload"
                 variant="outline"
-                label="Upload backup file"
+                :label="$t('backup.uploadBackupFile')"
                 @click="uploadFile" />
             <FullHeight>
                 <template #body>
@@ -36,17 +36,17 @@
                         <template #createdBy-header="{ column }">
                             <SortableTableHeader
                                 :column="column"
-                                label="Created By" />
+                                :label="$t('backup.createdBy')" />
                         </template>
                         <template #createdAt-header="{ column }">
                             <SortableTableHeader
                                 :column="column"
-                                label="Create Time" />
+                                :label="$t('backup.createTime')" />
                         </template>
                         <template #updatedAt-header="{ column }">
                             <SortableTableHeader
                                 :column="column"
-                                label="Update Time" />
+                                :label="$t('backup.updateTime')" />
                         </template>
                         <template #createdBy-cell="{ row }">
                             <ULink
@@ -56,7 +56,7 @@
                                 {{
                                     userStore.users.find(
                                         u => u.id === row.original.userId
-                                    )?.displayName ?? 'Anonymous'
+                                    )?.displayName ?? $t('common.anonymous')
                                 }}
                             </ULink>
                             <UBadge
@@ -64,7 +64,7 @@
                                 class="uppercase"
                                 variant="subtle"
                                 color="success">
-                                Automatically
+                                {{ $t('backup.automatically') }}
                             </UBadge>
                         </template>
                         <template #actions-cell="{ row }">
@@ -96,11 +96,11 @@
                 color="primary"
                 icon="i-lucide-refresh-ccw"
                 variant="outline"
-                label="Refresh"
+                :label="$t('common.refresh')"
                 @click="refreshSettings" />
             <UFormField
-                label="Enable automatic backup"
-                description="Automatic backup occurs 00:00 AM daily"
+                :label="$t('backup.enableAutomaticBackup')"
+                :description="$t('backup.automaticBackupDescription')"
                 class="mt-5 ml-5">
                 <USwitch
                     @change="updateAutomaticBackup"
@@ -112,6 +112,7 @@
 
 <script setup>
 import { ref, useTemplateRef, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { useBackupStore } from '../stores/backup.js'
 import { useUserStore } from '../stores/user.js'
@@ -135,6 +136,7 @@ import JSON5 from 'json5'
 const backupStore = useBackupStore()
 const userStore = useUserStore()
 const kvStore = useKvStore()
+const { t } = useI18n()
 
 onMounted(async () => {
     await backupStore.refresh()
@@ -142,17 +144,17 @@ onMounted(async () => {
 
 const refresh = async () => {
     await backupStore.refresh()
-    addSuccessfulToast('Refreshed successfully!')
+    addSuccessfulToast(t('toast.refreshedSuccessfully'))
 }
 
 const tabs = ref([
     {
-        label: 'Backup',
+        label: t('backup.tabs.backup'),
         icon: 'i-lucide-database-backup',
         slot: 'backup'
     },
     {
-        label: 'Automatic Backup',
+        label: t('backup.tabs.automaticBackup'),
         icon: 'i-lucide-bot',
         slot: 'automatic-backup'
     }
@@ -173,17 +175,17 @@ const columns = [
     },
     {
         acccessorKey: 'proccessCount',
-        header: 'Process Count',
+        header: t('backup.processCount'),
         cell: ({ row }) => row.original.metadata.appCount
     },
     {
         accessorKey: 'deploymentCount',
-        header: 'Deployment Count',
+        header: t('backup.deploymentCount'),
         cell: ({ row }) => row.original.metadata.deploymentCount
     },
     {
         accessorKey: 'size',
-        header: 'Size',
+        header: t('backup.size'),
         cell: ({ row }) => toFriendlyMemory(row.original.metadata.size)
     },
     {
@@ -209,36 +211,33 @@ const getActions = row => {
     return [
         {
             type: 'label',
-            label: 'Actions'
+            label: t('common.actions')
         },
         {
-            label: 'Download',
+            label: t('backup.download'),
             icon: 'i-lucide-hard-drive-download',
             async onSelect() {
-                const { event } = await createCommonBlade(
-                    backupDownloadBlade,
-                    {
-                        initVal: row.original
-                    }
-                )
+                const { event } = await createCommonBlade(backupDownloadBlade, {
+                    initVal: row.original
+                })
                 if (event === 'cancel') {
                     return
                 }
-                addSuccessfulToast('Downloaded successfully!')
+                addSuccessfulToast(t('toast.downloadedSuccessfully'))
             }
         },
         {
-            label: 'Restore',
+            label: t('backup.restore'),
             icon: 'i-lucide-archive-restore',
             async onSelect() {
                 if (await backupStore.restore(row.original.id)) {
-                    addSuccessfulToast('Restored successfully!')
+                    addSuccessfulToast(t('toast.restoredSuccessfully'))
                     await backupStore.refresh()
                 }
             }
         },
         {
-            label: 'Edit',
+            label: t('backup.edit'),
             icon: 'i-lucide-edit',
             async onSelect() {
                 const { event, data } = await createCommonBlade(BackupBlade, {
@@ -251,17 +250,17 @@ const getActions = row => {
                     return
                 }
                 if (await backupStore.update(row.original.id, data.name)) {
-                    addSuccessfulToast('Updated successfully!')
+                    addSuccessfulToast(t('toast.updatedSuccessfully'))
                 }
                 await backupStore.refresh()
             }
         },
         {
-            label: 'Delete',
+            label: t('backup.delete'),
             icon: 'i-lucide-trash-2',
             async onSelect() {
                 if (await backupStore.deleteItem(row.original.id)) {
-                    addSuccessfulToast('Deleted successfully!')
+                    addSuccessfulToast(t('toast.deletedSuccessfully'))
                     await backupStore.refresh()
                 }
             }
@@ -278,7 +277,7 @@ const startBackup = async () => {
         return
     }
     if (await backupStore.backupSnapshot(data.name)) {
-        addSuccessfulToast('Created successfully!')
+        addSuccessfulToast(t('toast.createdSuccessfully'))
         await backupStore.refresh()
     }
 }
@@ -323,19 +322,19 @@ const uploadFile = async () => {
             }
         }
     } catch (error) {
-        addErrorToast(error.message ?? 'Error parsing file')
+        addErrorToast(error.message ?? t('backup.errorParsingFile'))
         return
     }
 
     if (await backupStore.upload(filename, type, obj)) {
-        addSuccessfulToast('Uploaded successfully!')
+        addSuccessfulToast(t('toast.uploadedSuccessfully'))
         await backupStore.refresh()
     }
 }
 
 const refreshSettings = async () => {
     if (await kvStore.refresh()) {
-        addSuccessfulToast('Refreshed successfully!')
+        addSuccessfulToast(t('toast.refreshedSuccessfully'))
     }
 }
 
@@ -343,7 +342,7 @@ const updateAutomaticBackup = async () => {
     if (
         await kvStore.updateEnableAutoBackup(kvStore.settings.enableAutoBackup)
     ) {
-        addSuccessfulToast('Updated successfully!')
+        addSuccessfulToast(t('toast.updatedSuccessfully'))
     }
 }
 

@@ -16,7 +16,7 @@
                     color="neutral"
                     variant="ghost"
                     icon="i-lucide-x"
-                    @click="emit('update:modelValue', false)" />
+                    @click="emit('cancel')" />
             </div>
             <div class="w-200 p-2">
                 <UForm class="space-y-4 flex flex-col" @submit="onSubmit">
@@ -40,7 +40,9 @@
                     <UProgress animation="swing" v-if="loading" />
 
                     <div class="mt-5 mb-20" v-if="!autoRun">
-                        <UButton type="submit" class="">Submit</UButton>
+                        <UButton type="submit" class="">
+                            {{ $t('common.submit') }}
+                        </UButton>
                     </div>
                 </UForm>
                 <Terminal v-if="data" v-model="data"></Terminal>
@@ -59,7 +61,7 @@ const props = defineProps({
     initVal: Object,
     title: {
         type: String,
-        default: 'Deployment Result'
+        default: ''
     },
     value: Object,
     autoRun: Boolean,

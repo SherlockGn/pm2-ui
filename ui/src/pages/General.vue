@@ -6,9 +6,11 @@
                 color="primary"
                 icon="i-lucide-refresh-ccw"
                 variant="outline"
-                label="Refresh"
+                :label="$t('common.refresh')"
                 @click="refreshSettings" />
-            <UFormField label="Message subscriptions" class="mt-5 ml-5">
+            <UFormField
+                :label="$t('general.messageSubscriptions')"
+                class="mt-5 ml-5">
                 <StringList
                     v-model="kvStore.settings.subscribedMsgNames"></StringList>
                 <UButton
@@ -25,13 +27,13 @@
                 color="primary"
                 icon="i-lucide-refresh-ccw"
                 variant="outline"
-                label="Refresh"
+                :label="$t('common.refresh')"
                 @click="refreshSettings" />
             <UBadge variant="subtle" color="warning" class="ml-5">
-                Watch out the performance
+                {{ $t('general.watchOutThePerformance') }}
             </UBadge>
             <UFormField
-                label="Monitor interval of data collection"
+                :label="$t('general.monitorIntervalOfDataCollection')"
                 class="mt-5 ml-5">
                 <div class="mt-3">
                     <DateTimePeriod
@@ -47,7 +49,7 @@
                     icon="i-lucide-save"></UButton>
             </UFormField>
             <UFormField
-                label="Max size of buffered monitor data"
+                :label="$t('general.maxSizeOfBufferedMonitorData')"
                 class="mt-5 ml-5">
                 <UInputNumber
                     v-model="
@@ -62,7 +64,7 @@
                     icon="i-lucide-save"></UButton>
             </UFormField>
             <UFormField
-                label="Max age of buffered monitor data"
+                :label="$t('general.maxAgeOfBufferedMonitorData')"
                 class="mt-5 ml-5">
                 <DateTimePeriod
                     v-model="
@@ -82,6 +84,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useKvStore } from '../stores/kv.js'
 import { addSuccessfulToast } from '../utils.js'
 
@@ -89,16 +92,17 @@ import StringList from '../components/StringList.vue'
 import DateTime from '../components/DateTime.vue'
 import DateTimePeriod from '../components/DateTimePeriod.vue'
 
+const { t } = useI18n()
 const kvStore = useKvStore()
 
 const tabs = ref([
     {
-        label: 'Subscription',
+        label: t('general.tabs.subscription'),
         icon: 'i-lucide-book',
         slot: 'subscription'
     },
     {
-        label: 'Monitor',
+        label: t('general.tabs.monitor'),
         icon: 'i-lucide-monitor-cog',
         slot: 'monitor'
     }
@@ -110,7 +114,7 @@ const updateSubscribedMsgNames = async () => {
             kvStore.settings.subscribedMsgNames
         )
     ) {
-        addSuccessfulToast('Updated successfully!')
+        addSuccessfulToast(t('toast.updatedSuccessfully'))
     }
 }
 
@@ -120,7 +124,7 @@ const updateMonitorCollectDelay = async () => {
             kvStore.settings.monitorCollectDelay
         )
     ) {
-        addSuccessfulToast('Updated successfully!')
+        addSuccessfulToast(t('toast.updatedSuccessfully'))
     }
 }
 
@@ -130,7 +134,7 @@ const updateMonitorBufferMaxSize = async () => {
             kvStore.settings.monitorBufferMaxSize
         )
     ) {
-        addSuccessfulToast('Updated successfully!')
+        addSuccessfulToast(t('toast.updatedSuccessfully'))
     }
 }
 
@@ -140,13 +144,13 @@ const updateMonitorBufferMaxAge = async () => {
             kvStore.settings.monitorBufferMaxAge
         )
     ) {
-        addSuccessfulToast('Updated successfully!')
+        addSuccessfulToast(t('toast.updatedSuccessfully'))
     }
 }
 
 const refreshSettings = async () => {
     if (await kvStore.refresh()) {
-        addSuccessfulToast('Refreshed successfully!')
+        addSuccessfulToast(t('toast.refreshedSuccessfully'))
     }
 }
 </script>

@@ -12,8 +12,8 @@
                 <h2 class="text-highlighted font-semibold">
                     {{
                         props.mode === 'create'
-                            ? 'Create process'
-                            : 'Update process configuration'
+                            ? $t('appBlade.createProcess')
+                            : $t('appBlade.updateProcessConfiguration')
                     }}
                 </h2>
 
@@ -44,8 +44,8 @@
                                 <UButton type="submit" class="mt-5">
                                     {{
                                         props.mode === 'create'
-                                            ? 'Create and Run'
-                                            : 'Update'
+                                            ? $t('appBlade.createAndRun')
+                                            : $t('common.update')
                                     }}
                                 </UButton>
                                 <UButton
@@ -53,7 +53,7 @@
                                     v-if="props.mode === 'create'"
                                     variant="outline"
                                     class="mt-5 ml-3">
-                                    Create
+                                    {{ $t('appBlade.create') }}
                                 </UButton>
                             </div>
                         </template>
@@ -65,9 +65,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FullHeight from '../FullHeight.vue'
 import AppGroupProps from '../AppGroupProps.vue'
+
+const { t, te } = useI18n()
 
 import { allGroups } from '../../../../parameters.js'
 
@@ -84,10 +87,11 @@ const emit = defineEmits(['submit', 'close', 'cancel', 'createOnly'])
 
 const app = ref(props.initVal)
 
-const tabs = ref(
+const tabs = computed(() =>
     allGroups().map(g => {
+        const key = `parameters.groups.${g.name}`
         return {
-            label: g.label,
+            label: te(key) ? t(key) : g.label,
             slot: g.name,
             icon: g.icon
         }
@@ -97,10 +101,10 @@ const tabs = ref(
 function validate(state) {
     const errors = []
     if (!state.name) {
-        errors.push({ name: 'name', message: 'Required' })
+        errors.push({ name: 'name', message: t('common.required') })
     }
     if (!state.script) {
-        errors.push({ name: 'script', message: 'Required' })
+        errors.push({ name: 'script', message: t('common.required') })
     }
     return errors
 }

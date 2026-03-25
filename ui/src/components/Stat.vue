@@ -32,14 +32,22 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useProcessStore } from '../stores/process.js'
 
+const { t } = useI18n()
 const processStore = useProcessStore()
 
 const total = computed(() => processStore.processes.length)
-const runningCount = computed(() => processStore.processes.filter((p) => p.status?.toLowerCase() ==='online').length)
+const runningCount = computed(
+    () =>
+        processStore.processes.filter(p => p.status?.toLowerCase() === 'online')
+            .length
+)
 const stoppedCount = computed(() => total.value - runningCount.value)
-const restartCount = computed(() => processStore.processes.map(i => i.restartCount).reduce((a, b) => a + b, 0))
+const restartCount = computed(() =>
+    processStore.processes.map(i => i.restartCount).reduce((a, b) => a + b, 0)
+)
 
 const stats = computed(() => {
     const runningPercent =
@@ -49,25 +57,25 @@ const stats = computed(() => {
     const stoppedPercent = 100 - runningPercent
     return [
         {
-            title: 'Total Count',
+            title: t('stats.totalCount'),
             icon: 'lucide:app-window',
             value: total.value
         },
         {
-            title: 'Running Count',
+            title: t('stats.runningCount'),
             icon: 'lucide:monitor-check',
             value: runningCount.value,
             extra: `${runningPercent}%`
         },
         {
-            title: 'Stopped Count',
+            title: t('stats.stoppedCount'),
             icon: 'lucide:monitor-x',
             value: stoppedCount.value,
             extra: `${stoppedPercent}%`,
             extraColor: 'error'
         },
         {
-            title: 'Total Restart Count',
+            title: t('stats.totalRestartCount'),
             icon: 'lucide:monitor-play',
             value: restartCount.value
         }

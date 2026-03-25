@@ -1,7 +1,7 @@
 <template>
     <div class="flex">
         <ProcessSelector v-model="selected" @refresh="refresh" />
-        <UFormField label="Enable monitor" class="ml-20">
+        <UFormField :label="$t('metric.enableMonitor')" class="ml-20">
             <USwitch
                 :disabled="!selected"
                 @change="updateSetting"
@@ -9,25 +9,29 @@
         </UFormField>
     </div>
     <div class="flex">
-        <UFormField label="Start time">
+        <UFormField :label="$t('metric.startTime')">
             <DateTime v-model="start" />
         </UFormField>
-        <UFormField label="End time" class="ml-5">
+        <UFormField :label="$t('metric.endTime')" class="ml-5">
             <DateTime v-model="end" />
         </UFormField>
         <UFormField label="&nbsp;" class="ml-5">
             <UDropdownMenu :items="quickActions">
                 <UButton color="primary" variant="outline">
-                    Quick select
+                    {{ $t('metric.quickSelect') }}
                 </UButton>
             </UDropdownMenu>
         </UFormField>
         <UFormField class="ml-5">
             <template #label>
-                <span>Sample Duration</span>
+                <span>{{ $t('metric.sampleDuration') }}</span>
                 <span v-if="sampleCount > 500" class="inline-block ml-2">
                     <UBadge variant="subtle" color="warning">
-                        {{ `${sampleCount} results generated.` }}
+                        {{
+                            $t('metric.resultsGenerated', {
+                                count: sampleCount
+                            })
+                        }}
                     </UBadge>
                 </span>
             </template>
@@ -35,10 +39,10 @@
         </UFormField>
     </div>
     <div class="flex">
-        <UFormField label="Select metric">
+        <UFormField :label="$t('metric.selectMetric')">
             <USelectMenu class="w-60" v-model="metricName" :items="metrics" />
         </UFormField>
-        <UFormField label="Aggregation" class="ml-20">
+        <UFormField :label="$t('metric.aggregation')" class="ml-20">
             <USelectMenu
                 class="w-40"
                 v-model="aggreation"
@@ -51,7 +55,7 @@
             color="primary"
             icon="i-lucide-refresh-ccw"
             variant="outline"
-            label="Sync metric"
+            :label="$t('metric.syncMetric')"
             :disabled="!selected"
             @click="getMetrics" />
     </UFormField>
@@ -61,7 +65,9 @@
         :ui="{ root: 'overflow-visible', body: '!px-0 !pt-0 !pb-3' }">
         <template #header>
             <div>
-                <p class="text-xs text-muted uppercase mb-1.5">Metric</p>
+                <p class="text-xs text-muted uppercase mb-1.5">
+                    {{ $t('metric.metricLabel') }}
+                </p>
                 <p class="text-3xl text-highlighted font-semibold">
                     {{
                         `${targetMetric?.name} ${targetMetric?.unit ? `(${targetMetric?.unit})` : ''}`
@@ -98,9 +104,12 @@
 
 <script setup>
 import { ref, onMounted, watchEffect, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useSettingStore } from '../stores/setting.js'
 import { useMetricStore } from '../stores/metric.js'
 import { addSuccessfulToast, toFriendlyMemory } from '../utils.js'
+
+const { t } = useI18n()
 import DateTime from '../components/DateTime.vue'
 
 import {
@@ -145,23 +154,23 @@ const metrics = computed(() => {
 const aggregations = ref([
     {
         id: 'avg',
-        label: 'Average'
+        label: t('metric.aggregations.average')
     },
     {
         id: 'min',
-        label: 'Minimum'
+        label: t('metric.aggregations.minimum')
     },
     {
         id: 'max',
-        label: 'Maximum'
+        label: t('metric.aggregations.maximum')
     },
     {
         id: 'sum',
-        label: 'Sum'
+        label: t('metric.aggregations.sum')
     },
     {
         id: 'count',
-        label: 'Count'
+        label: t('metric.aggregations.count')
     }
 ])
 
@@ -173,67 +182,67 @@ const setQuickTime = last => {
 const quickActions = ref([
     [
         {
-            label: 'Last 5 minutes',
+            label: t('metric.quickTimes.last5Minutes'),
             onSelect() {
                 setQuickTime(5 * 60 * 1000)
             }
         },
         {
-            label: 'Last 15 minutes',
+            label: t('metric.quickTimes.last15Minutes'),
             onSelect() {
                 setQuickTime(15 * 60 * 1000)
             }
         },
         {
-            label: 'Last 30 minutes',
+            label: t('metric.quickTimes.last30Minutes'),
             onSelect() {
                 setQuickTime(30 * 60 * 1000)
             }
         },
         {
-            label: 'Last 1 hour',
+            label: t('metric.quickTimes.last1Hour'),
             onSelect() {
                 setQuickTime(60 * 60 * 1000)
             }
         },
         {
-            label: 'Last 3 hours',
+            label: t('metric.quickTimes.last3Hours'),
             onSelect() {
                 setQuickTime(3 * 60 * 60 * 1000)
             }
         },
         {
-            label: 'Last 6 hours',
+            label: t('metric.quickTimes.last6Hours'),
             onSelect() {
                 setQuickTime(6 * 60 * 60 * 1000)
             }
         },
         {
-            label: 'Last 12 hours',
+            label: t('metric.quickTimes.last12Hours'),
             onSelect() {
                 setQuickTime(12 * 60 * 60 * 1000)
             }
         },
         {
-            label: 'Last 1 day',
+            label: t('metric.quickTimes.last1Day'),
             onSelect() {
                 setQuickTime(24 * 60 * 60 * 1000)
             }
         },
         {
-            label: 'Last 2 days',
+            label: t('metric.quickTimes.last2Days'),
             onSelect() {
                 setQuickTime(2 * 24 * 60 * 60 * 1000)
             }
         },
         {
-            label: 'Last 3 days',
+            label: t('metric.quickTimes.last3Days'),
             onSelect() {
                 setQuickTime(3 * 24 * 60 * 60 * 1000)
             }
         },
         {
-            label: 'Last 7 days',
+            label: t('metric.quickTimes.last7Days'),
             onSelect() {
                 setQuickTime(7 * 24 * 60 * 60 * 1000)
             }
@@ -253,7 +262,7 @@ watchEffect(() => {
 
 const updateSetting = async () => {
     if (await settingStore.update(selected.value?.pmId)) {
-        addSuccessfulToast('Updated successfully!')
+        addSuccessfulToast(t('toast.updatedSuccessfully'))
     }
 }
 

@@ -9,7 +9,9 @@
         @animationEnd="e => e || emit('close')">
         <template #body>
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
-                <h2 class="text-highlighted font-semibold">Send signal</h2>
+                <h2 class="text-highlighted font-semibold">
+                    {{ $t('sendSignalBlade.sendSignal') }}
+                </h2>
                 <UButton
                     color="neutral"
                     variant="ghost"
@@ -20,7 +22,7 @@
                 <UForm
                     class="space-y-4 flex flex-col h-[80vh]"
                     @submit="onSubmit">
-                    <UFormField label="Select signal type">
+                    <UFormField :label="$t('sendSignalBlade.selectSignalType')">
                         <USelect
                             v-model="signal"
                             :items="allSignals"
@@ -28,7 +30,9 @@
                     </UFormField>
 
                     <div class="mt-auto mb-20">
-                        <UButton type="submit" class="">Submit</UButton>
+                        <UButton type="submit" class="">
+                            {{ $t('common.submit') }}
+                        </UButton>
                     </div>
                 </UForm>
             </div>

@@ -9,7 +9,9 @@
         @animationEnd="e => e || emit('close')">
         <template #body>
             <div class="flex items-center justify-between gap-4 mb-2 p-2">
-                <h2 class="text-highlighted font-semibold">Download file</h2>
+                <h2 class="text-highlighted font-semibold">
+                    {{ $t('backupDownloadBlade.downloadFile') }}
+                </h2>
                 <UButton
                     color="neutral"
                     variant="ghost"
@@ -21,19 +23,21 @@
                     class="space-y-4 flex flex-col h-[80vh]"
                     @submit="onSubmit">
                     <UCheckbox
-                        label="Include processes"
+                        :label="$t('backupDownloadBlade.includeProcesses')"
                         v-model="includeApps" />
                     <UCheckbox
-                        label="Include deployments"
+                        :label="$t('backupDownloadBlade.includeDeployments')"
                         v-model="includeDeployments" />
 
-                    <UFormField label="Select file name">
+                    <UFormField
+                        :label="$t('backupDownloadBlade.selectFileName')">
                         <USelect
                             v-model="fileName"
                             :items="filesNames"
                             class="w-64" />
                     </UFormField>
-                    <UFormField label="Select download type">
+                    <UFormField
+                        :label="$t('backupDownloadBlade.selectDownloadType')">
                         <USelect
                             v-model="downloadType"
                             :items="downloadTypes"
@@ -41,7 +45,9 @@
                     </UFormField>
 
                     <div class="mt-auto mb-20">
-                        <UButton type="submit" class="">Submit</UButton>
+                        <UButton type="submit" class="">
+                            {{ $t('common.submit') }}
+                        </UButton>
                     </div>
                 </UForm>
             </div>
@@ -51,7 +57,10 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useBackupStore } from '../../stores/backup.js'
+
+const { t } = useI18n()
 
 const props = defineProps({
     open: Boolean,
@@ -73,19 +82,19 @@ const filesNames = ['ecosystem', 'ecosystem.config']
 
 const downloadTypes = [
     {
-        label: 'Raw',
+        label: t('backupDownloadBlade.downloadTypes.raw'),
         value: 'raw'
     },
     {
-        label: 'JSON',
+        label: t('backupDownloadBlade.downloadTypes.json'),
         value: 'json'
     },
     {
-        label: 'Common JS',
+        label: t('backupDownloadBlade.downloadTypes.commonJs'),
         value: 'cjs'
     },
     {
-        label: 'ESM',
+        label: t('backupDownloadBlade.downloadTypes.esm'),
         value: 'esm'
     }
 ]
