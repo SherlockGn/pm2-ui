@@ -4,12 +4,10 @@
         class="bg-white rounded-xl border border-slate-200 flex flex-col overflow-hidden shadow-sm">
         <div
             class="px-4 py-3 bg-slate-50/50 border-b border-slate-100 flex flex-col">
-            <span
-                class="text-3 font-bold font-mono uppercase">
+            <span class="text-3 font-bold font-mono uppercase">
                 {{ title }}
             </span>
-            <span
-                class="text-3 text-slate-400 font-mono truncate">
+            <span class="text-3 text-slate-400 font-mono truncate">
                 {{ path }}
             </span>
         </div>

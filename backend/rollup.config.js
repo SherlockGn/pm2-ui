@@ -7,9 +7,10 @@ export default {
         format: 'es',
         file: '../dist/server.js'
     },
-    plugins: [resolve(), commonjs({
-        dynamicRequireTargets: [
-            'node_modules/bcryptjs/*.js'
-        ]
-    })]
+    plugins: [
+        resolve(),
+        commonjs({
+            dynamicRequireTargets: ['node_modules/bcryptjs/*.js']
+        })
+    ]
 }

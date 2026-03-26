@@ -2,9 +2,7 @@
 
 A full-featured, self-hosted web dashboard for [PM2](https://pm2.keymetrics.io/) — the Node.js process manager. Manage, monitor, and deploy your applications entirely from the browser.
 
-![Node.js](https://img.shields.io/badge/Node.js-≥22.5-green)
-![Vue 3](https://img.shields.io/badge/Vue-3-brightgreen)
-![License](https://img.shields.io/badge/license-ISC-blue)
+![Node.js](https://img.shields.io/badge/Node.js-≥22.5-green) ![Vue 3](https://img.shields.io/badge/Vue-3-brightgreen) ![License](https://img.shields.io/badge/license-ISC-blue)
 
 ![Dashboard overview](docs/assets/overview.png)
 
@@ -21,6 +19,7 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 ## Features
 
 ### Process Management
+
 - Create, start, stop, restart, reload, and delete processes
 - Full 46-parameter configuration with grouped UI (General, Advanced, Static Serve, Log Files, Control Flow)
 - Environment variable management with profile support (default, production, custom)
@@ -30,6 +29,7 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 ![Process parameters](docs/assets/parameters.png)
 
 ### Real-Time Monitoring
+
 - Per-process CPU and memory metrics with configurable collection intervals
 - Time-series charts with aggregation (AVG, SUM, MIN, MAX, COUNT) and adjustable sample duration
 - Buffered metric collection to minimize database overhead
@@ -37,6 +37,7 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 ![Metrics chart](docs/assets/metrics.png)
 
 ### Logs
+
 - Tail stdout and stderr logs directly in the browser
 - Configurable line count
 - Auto-refresh mode
@@ -44,6 +45,7 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 ![Log viewer](docs/assets/logs.png)
 
 ### IPC Communication
+
 - Send data messages to processes (`process:msg`)
 - Trigger Remote Procedure Calls (RPC) with parameter support
 - Send OS signals (SIGINT, SIGTERM, etc.)
@@ -52,6 +54,7 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 ![IPC communication](docs/assets/communication.png)
 
 ### Deployment
+
 - Full PM2 deployment workflow: setup → deploy → update → revert
 - SSH configuration (key, user, hosts, options)
 - Pre/post hooks for setup, deploy, and local operations
@@ -60,6 +63,7 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 ![Deployment](docs/assets/deployment.png)
 
 ### Actions
+
 - Reset restart counters, flush logs
 - Generate startup/unstartup scripts
 - Save and resurrect process lists
@@ -67,12 +71,14 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 - Kill daemon, ping daemon
 
 ### Backup & Restore
+
 - Snapshot all managed process configurations and deployments
 - Automatic daily backups (midnight, configurable)
 - Upload and restore from backup files
 - Download backups as JSON
 
 ### Administration
+
 - Multi-user support with super-user roles
 - JWT authentication with configurable token expiration
 - Per-action audit log (create, update, delete, login) with resource tracking
@@ -84,11 +90,11 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 
 ## Tech Stack
 
-| Layer    | Technology                                                       |
-|----------|------------------------------------------------------------------|
-| Backend  | [Hono](https://hono.dev/), Node.js built-in SQLite, bcryptjs     |
-| Frontend | Vue 3, [Nuxt UI](https://ui.nuxt.com/) v4, Pinia                 |
-| Build    | Vite (frontend), Rollup (backend)                                |
+| Layer    | Technology                                                   |
+| -------- | ------------------------------------------------------------ |
+| Backend  | [Hono](https://hono.dev/), Node.js built-in SQLite, bcryptjs |
+| Frontend | Vue 3, [Nuxt UI](https://ui.nuxt.com/) v4, Pinia             |
+| Build    | Vite (frontend), Rollup (backend)                            |
 
 ## Requirements
 
@@ -107,6 +113,7 @@ node server.js
 The server starts on port **12345** by default. Open `http://localhost:12345` in your browser.
 
 To use a different port:
+
 ```bash
 PORT=8080 node server.js
 ```
@@ -132,12 +139,14 @@ cd ../ui && npm install
 ### Run in development mode
 
 Start the backend:
+
 ```bash
 cd backend
 node index.js
 ```
 
 Start the frontend dev server:
+
 ```bash
 cd ui
 npm run dev
@@ -158,7 +167,7 @@ cd ../backend && npm run build
 PM2 UI supports all 46 process configuration parameters, organized into 5 groups:
 
 | Group | Parameters |
-|-------|------------|
+| --- | --- |
 | **General** (7) | Application name, Script path, Working directory, Script arguments, Interpreter, Interpreter arguments, Node arguments |
 | **Advanced** (16) | Instance count, Execution mode, Watch, Ignore watch, Max memory restart, Environment variables, Environment profiles, Append env to name, Source map support, Instance variable, Filter env, Increment variable, Stop exit codes, Exponential backoff restart delay |
 | **Static Serve** (6) | Static files path, Serve port, Single-page application mode, Basic auth toggle, Basic auth username, Basic auth password |

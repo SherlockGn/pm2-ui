@@ -6,18 +6,8 @@ export const router = new Hono()
 
 router.post('/query/:id', checkProcess, async c => {
     c.set('act', null)
-    const { typeList, namePattern, offset, limit } =
-        await c.req.json()
-    c.set(
-        'ret',
-        await get(
-            c.get('rsrc'),
-            typeList,
-            namePattern,
-            offset,
-            limit
-        )
-    )
+    const { typeList, namePattern, offset, limit } = await c.req.json()
+    c.set('ret', await get(c.get('rsrc'), typeList, namePattern, offset, limit))
 })
 
 router.post('/trigger/:id', checkProcess, async c => {

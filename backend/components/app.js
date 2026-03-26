@@ -7,10 +7,7 @@ import {
     getAppByGuid
 } from './database.js'
 
-import {
-    toDataObject as tdo,
-    fromDataObject as fdo
-} from '../../parameters.js'
+import { toDataObject as tdo, fromDataObject as fdo } from '../../parameters.js'
 
 const fromDataObject = app => {
     if (!app) {
