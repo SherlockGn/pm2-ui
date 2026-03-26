@@ -1,9 +1,11 @@
 <template>
-    <UInputDate :modelValue="date" @update:modelValue="updateDate" />
-    <UInputTime
-        :modelValue="time"
-        :hour-cycle="24"
-        @update:modelValue="updateTime" />
+    <div class="flex items-center gap-2">
+        <UInputDate :modelValue="date" @update:modelValue="updateDate" />
+        <UInputTime
+            :modelValue="time"
+            :hour-cycle="24"
+            @update:modelValue="updateTime" />
+    </div>
 </template>
 
 <script setup>

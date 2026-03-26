@@ -351,6 +351,10 @@ const actions = ref([
     {
         'label': t('adminLog.actions.upload'),
         'value': 'upload'
+    },
+    {
+        'label': t('adminLog.actions.vacuum'),
+        'value': 'vacuum'
     }
 ])
 

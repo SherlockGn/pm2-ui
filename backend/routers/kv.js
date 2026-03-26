@@ -11,7 +11,8 @@ import {
     updateDbCleanUpEarlierThan,
     updateMonitorCollectDelay,
     updateMonitorBufferMaxSize,
-    updateMonitorBufferMaxAge
+    updateMonitorBufferMaxAge,
+    updateEnableAutoVacuum
 } from '../components/kv.js'
 
 import { resetBus } from '../components/communication.js'
@@ -71,4 +72,9 @@ router.put('/monitorBufferMaxAge', async c => {
 router.put('/enableAutoBackup', async c => {
     const { value } = await c.req.json()
     await updateEnableAutoBackup(value)
+})
+
+router.put('/enableAutoVacuum', async c => {
+    const { value } = await c.req.json()
+    await updateEnableAutoVacuum(value)
 })

@@ -29,6 +29,7 @@ export default {
         restoredSuccessfully: '復元しました！',
         uploadedSuccessfully: 'アップロードしました！',
         cleanedUpSuccessfully: 'クリーンアップしました！',
+        vacuumedSuccessfully: '最適化しました！',
         managedSuccessfully: '管理設定しました！',
         restartedSuccessfully: '再起動しました！',
         reloadedSuccessfully: 'リロードしました！',
@@ -201,7 +202,8 @@ export default {
             update: '更新',
             updatePm2: 'PM2 を更新',
             upgrade: 'アップグレード',
-            upload: 'アップロード'
+            upload: 'アップロード',
+            vacuum: '最適化'
         },
         categories: {
             user: 'ユーザー',
@@ -373,7 +375,14 @@ export default {
         enableAutomaticDatabaseCleanUp:
             '自動データベースクリーンアップを有効化',
         automaticCleanupDescription:
-            '毎日午前 1:00 にデータベースの自動クリーンアップを実行'
+            '毎日午前 1:00 にデータベースの自動クリーンアップを実行',
+        enableAutomaticVacuum: '自動最適化を有効化',
+        automaticVacuumDescription:
+            '毎日午前 1:00 にクリーンアップ後、データベースの自動最適化を実行',
+        vacuumDatabase: 'データベースの最適化',
+        vacuum: '最適化',
+        vacuumDescription:
+            'データベースファイルを再構築し、未使用の領域を回収してファイルサイズを削減します'
     },
 
     user: {

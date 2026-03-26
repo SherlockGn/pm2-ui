@@ -6,7 +6,8 @@ import {
     cleanAdminLogs,
     cleanCommunications,
     cleanMetrics,
-    cleanSettings
+    cleanSettings,
+    vacuum
 } from './database.js'
 
 import { list as listProcesses } from './process.js'
@@ -88,6 +89,31 @@ export const autoCleanExpired = async () => {
             successful,
             resourceName: null,
             resourceData: data,
+            errorMsg
+        })
+    }
+}
+
+export const autoVacuum = async () => {
+    if (!getSettings().enableAutoVacuum) {
+        return
+    }
+    let successful = true
+    let errorMsg = null
+    try {
+        vacuum()
+    } catch (err) {
+        successful = false
+        errorMsg = err.message
+    } finally {
+        await createAdminLog({
+            userId: null,
+            userDisplayName: null,
+            action: 'vacuum',
+            category: 'cleanup',
+            successful,
+            resourceName: null,
+            resourceData: null,
             errorMsg
         })
     }

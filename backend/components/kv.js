@@ -16,6 +16,7 @@ export const refresh = async () => {
     enableAutoBackup = (await getKv('enable_auto_backup').value) === '1'
     subscribedMsgNames = JSON.parse(await getKv('subscribed_msg_names').value)
     enableAutoDbCleanup = (await getKv('enable_auto_db_cleanup').value) === '1'
+    enableAutoVacuum = (await getKv('enable_auto_vacuum').value) === '1'
     dbCleanUpEarlierThan = +(await getKv('db_clean_up_earlier_than').value)
     monitorCollectDelay = +(await getKv('monitor_collect_delay').value)
     monitorBufferMaxSize = +(await getKv('monitor_buffer_max_size').value)
@@ -29,6 +30,7 @@ export const getSettings = () => {
         enableAutoBackup,
         subscribedMsgNames,
         enableAutoDbCleanup,
+        enableAutoVacuum,
         dbCleanUpEarlierThan,
         monitorCollectDelay,
         monitorBufferMaxSize,
@@ -90,6 +92,12 @@ export const updateMonitorBufferMaxAge = async value => {
     monitorBufferMaxAge = value
 }
 
+let enableAutoVacuum = true
+export const updateEnableAutoVacuum = async value => {
+    createOrUpdateKv('enable_auto_vacuum', value ? '1' : '0')
+    enableAutoVacuum = value
+}
+
 export const init = async () => {
     createOrUpdateKv('jwt_key', randomBytes(32).toString('hex'))
     createOrUpdateKv('enable_cors', '1')
@@ -101,4 +109,5 @@ export const init = async () => {
     createOrUpdateKv('monitor_collect_delay', '5000')
     createOrUpdateKv('monitor_buffer_max_size', '100')
     createOrUpdateKv('monitor_buffer_max_age', `${10 * 60 * 1000}`)
+    createOrUpdateKv('enable_auto_vacuum', '1')
 }

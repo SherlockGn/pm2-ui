@@ -46,6 +46,10 @@ export const close = () => {
     db.close()
 }
 
+export const vacuum = () => {
+    db.exec('VACUUM')
+}
+
 // users
 
 const createUserTable = () => {

@@ -10,6 +10,7 @@ export const useKvStore = defineStore('kv', () => {
         enableAutoBackup: true,
         subscribedMsgNames: ['process:msg'],
         enableAutoDbCleanup: true,
+        enableAutoVacuum: true,
         dbCleanUpEarlierThan: 7 * 24 * 60 * 60 * 1000,
         monitorCollectDelay: 5000,
         monitorBufferMaxSize: 100,
@@ -50,6 +51,10 @@ export const useKvStore = defineStore('kv', () => {
         return !!(await request.put('kv/enableAutoDbCleanup', { value }))
     }
 
+    const updateEnableAutoVacuum = async value => {
+        return !!(await request.put('kv/enableAutoVacuum', { value }))
+    }
+
     const updateDbCleanUpEarlierThan = async value => {
         return !!(await request.put('kv/dbCleanUpEarlierThan', {
             value
@@ -79,6 +84,7 @@ export const useKvStore = defineStore('kv', () => {
         updateTokenExpireTime,
         updateSubscribedMsgNames,
         updateEnableAutoDbCleanup,
+        updateEnableAutoVacuum,
         updateDbCleanUpEarlierThan,
         updateMonitorCollectDelay,
         updateMonitorBufferMaxSize,

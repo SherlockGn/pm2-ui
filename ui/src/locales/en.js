@@ -31,6 +31,7 @@ export default {
         restoredSuccessfully: 'Restored successfully!',
         uploadedSuccessfully: 'Uploaded successfully!',
         cleanedUpSuccessfully: 'Cleaned up successfully!',
+        vacuumedSuccessfully: 'Vacuumed successfully!',
         managedSuccessfully: 'Managed successfully!',
         restartedSuccessfully: 'Restarted successfully!',
         reloadedSuccessfully: 'Reloaded successfully!',
@@ -211,7 +212,8 @@ export default {
             update: 'Update',
             updatePm2: 'Update PM2',
             upgrade: 'Upgrade',
-            upload: 'Upload'
+            upload: 'Upload',
+            vacuum: 'Vacuum'
         },
         categories: {
             user: 'User',
@@ -390,7 +392,14 @@ export default {
         cleanUp: 'Clean Up',
         enableAutomaticDatabaseCleanUp: 'Enable automatic database clean-up',
         automaticCleanupDescription:
-            'Automatic database clean-up runs daily at 1:00 AM'
+            'Automatic database clean-up runs daily at 1:00 AM',
+        enableAutomaticVacuum: 'Enable automatic vacuum',
+        automaticVacuumDescription:
+            'Automatic database vacuum runs daily at 1:00 AM after clean-up',
+        vacuumDatabase: 'Vacuum Database',
+        vacuum: 'Vacuum',
+        vacuumDescription:
+            'Rebuild the database file, reclaiming unused space and reducing file size'
     },
 
     // ─── User Page / UserList Component ────────────────────────────────

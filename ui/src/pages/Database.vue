@@ -69,6 +69,19 @@
                     {{ $t('database.cleanUp') }}
                 </UButton>
             </UFormField>
+            <UFormField
+                :label="$t('database.vacuumDatabase')"
+                :description="$t('database.vacuumDescription')"
+                class="mt-5 ml-5">
+                <UButton
+                    @click="vacuumDb"
+                    class="mt-3"
+                    color="primary"
+                    variant="outline"
+                    icon="i-lucide-hard-drive">
+                    {{ $t('database.vacuum') }}
+                </UButton>
+            </UFormField>
         </template>
         <template #automatic-cleanup>
             <UButton
@@ -85,6 +98,14 @@
                 <USwitch
                     @change="updateEnableAutoDbCleanup"
                     v-model="kvStore.settings.enableAutoDbCleanup"></USwitch>
+            </UFormField>
+            <UFormField
+                :label="$t('database.enableAutomaticVacuum')"
+                :description="$t('database.automaticVacuumDescription')"
+                class="mt-5 ml-5">
+                <USwitch
+                    @change="updateEnableAutoVacuum"
+                    v-model="kvStore.settings.enableAutoVacuum"></USwitch>
             </UFormField>
         </template>
     </UTabs>
@@ -138,6 +159,14 @@ const updateEnableAutoDbCleanup = async value => {
     }
 }
 
+const updateEnableAutoVacuum = async value => {
+    if (
+        await kvStore.updateEnableAutoVacuum(kvStore.settings.enableAutoVacuum)
+    ) {
+        addSuccessfulToast(t('toast.updatedSuccessfully'))
+    }
+}
+
 const updateDbCleanUpEarlierThan = async () => {
     if (
         (await kvStore.updateDbCleanUpEarlierThan(
@@ -152,6 +181,12 @@ const updateDbCleanUpEarlierThan = async () => {
 const cleanup = async () => {
     if ((await cleanupStore.cleanup()) && (await cleanupStore.refresh())) {
         addSuccessfulToast(t('toast.cleanedUpSuccessfully'))
+    }
+}
+
+const vacuumDb = async () => {
+    if (await cleanupStore.vacuum()) {
+        addSuccessfulToast(t('toast.vacuumedSuccessfully'))
     }
 }
 </script>

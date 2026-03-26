@@ -29,6 +29,7 @@ export default {
         restoredSuccessfully: '恢复成功！',
         uploadedSuccessfully: '上传成功！',
         cleanedUpSuccessfully: '清理成功！',
+        vacuumedSuccessfully: '整理成功！',
         managedSuccessfully: '托管成功！',
         restartedSuccessfully: '重启成功！',
         reloadedSuccessfully: '重载成功！',
@@ -196,7 +197,8 @@ export default {
             update: '更新',
             updatePm2: '更新 PM2',
             upgrade: '升级',
-            upload: '上传'
+            upload: '上传',
+            vacuum: '整理'
         },
         categories: {
             user: '用户',
@@ -364,7 +366,12 @@ export default {
         cleanUpDatabase: '清理数据库',
         cleanUp: '清理',
         enableAutomaticDatabaseCleanUp: '启用自动数据库清理',
-        automaticCleanupDescription: '每日凌晨 1:00 自动清理数据库'
+        automaticCleanupDescription: '每日凌晨 1:00 自动清理数据库',
+        enableAutomaticVacuum: '启用自动整理',
+        automaticVacuumDescription: '每日凌晨 1:00 清理后自动整理数据库',
+        vacuumDatabase: '整理数据库',
+        vacuum: '整理',
+        vacuumDescription: '重建数据库文件，回收未使用的空间并减小文件大小'
     },
 
     user: {

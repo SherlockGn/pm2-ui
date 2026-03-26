@@ -25,9 +25,14 @@ export const useCleanupStore = defineStore('cleanup', () => {
         return !!(await request.delete('cleanup'))
     }
 
+    const vacuum = async () => {
+        return !!(await request.post('cleanup/vacuum'))
+    }
+
     return {
         info,
         refresh,
-        cleanup
+        cleanup,
+        vacuum
     }
 })

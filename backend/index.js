@@ -20,7 +20,7 @@ import { init as initMetric } from './components/metric.js'
 import { init as initCommunication } from './components/communication.js'
 import { init as initDeployment } from './components/deployment.js'
 import { autoBackupSnapshot } from './components/backup.js'
-import { autoCleanExpired } from './components/cleanup.js'
+import { autoCleanExpired, autoVacuum } from './components/cleanup.js'
 
 import { router as userRouter } from './routers/user.js'
 import { router as processRouter } from './routers/process.js'
@@ -91,6 +91,7 @@ createDailyScheduler(0, 0, async () => {
 
 createDailyScheduler(1, 0, async () => {
     await autoCleanExpired()
+    await autoVacuum()
 })
 
 let exit = 0
