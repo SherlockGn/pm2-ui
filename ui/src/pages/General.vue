@@ -79,6 +79,21 @@
                     icon="i-lucide-save"></UButton>
             </UFormField>
         </template>
+        <template #preferences>
+            <UFormField
+                :label="$t('general.clearPreferences')"
+                :description="$t('general.clearPreferencesDescription')"
+                class="mt-5 ml-5">
+                <UButton
+                    @click="clearPreferences"
+                    class="mt-3"
+                    color="error"
+                    variant="outline"
+                    icon="i-lucide-trash-2">
+                    {{ $t('general.clearPreferences') }}
+                </UButton>
+            </UFormField>
+        </template>
     </UTabs>
 </template>
 
@@ -105,6 +120,11 @@ const tabs = ref([
         label: t('general.tabs.monitor'),
         icon: 'i-lucide-monitor-cog',
         slot: 'monitor'
+    },
+    {
+        label: t('general.tabs.preferences'),
+        icon: 'i-lucide-settings',
+        slot: 'preferences'
     }
 ])
 
@@ -146,6 +166,15 @@ const updateMonitorBufferMaxAge = async () => {
     ) {
         addSuccessfulToast(t('toast.updatedSuccessfully'))
     }
+}
+
+const clearPreferences = () => {
+    const token = localStorage.getItem('token')
+    localStorage.clear()
+    if (token) {
+        localStorage.setItem('token', token)
+    }
+    location.reload()
 }
 
 const refreshSettings = async () => {

@@ -13,6 +13,7 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 - **46 process creation parameters** across 5 categories (General, Advanced, Static Serve, Logs, Control Flow), with full parity to PM2's `ecosystem.config.js`
 - **100% PM2 Functionality coverage** — every PM2 command is exposed through the UI
 - **Built-in administration** — user management, role-based access control, audit logging, automated backups, and database maintenance out of the box
+- **Internationalization (i18n)** — multi-language support with instant language switching
 - **Zero external dependencies** — uses Node.js built-in SQLite (`node:sqlite`), no database setup required
 - **Single-file deployment** — backend bundles to a single file via Rollup
 
@@ -83,6 +84,7 @@ Most PM2 dashboards only cover the basics — start, stop, restart. PM2 UI goes 
 - JWT authentication with configurable token expiration
 - Per-action audit log (create, update, delete, login) with resource tracking
 - Automatic database clean-up with configurable retention period
+- Database vacuum — reclaim unused space and reduce file size, with optional automatic daily scheduling
 - JWT key regeneration
 - CORS toggle
 

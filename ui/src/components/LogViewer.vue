@@ -1,10 +1,11 @@
 <template>
     <div
         ref="container"
-        class="bg-white rounded-xl border border-slate-200 flex flex-col overflow-hidden shadow-sm">
+        class="bg-white dark:bg-gray-900 rounded-xl border border-slate-200 dark:border-gray-700 flex flex-col overflow-hidden shadow-sm">
         <div
-            class="px-4 py-3 bg-slate-50/50 border-b border-slate-100 flex flex-col">
-            <span class="text-3 font-bold font-mono uppercase">
+            class="px-4 py-3 bg-slate-50/50 dark:bg-gray-800/50 border-b border-slate-100 dark:border-gray-700 flex flex-col">
+            <span
+                class="text-3 font-bold font-mono uppercase text-gray-900 dark:text-gray-100">
                 {{ title }}
             </span>
             <span class="text-3 text-slate-400 font-mono truncate">
@@ -13,22 +14,22 @@
         </div>
         <div
             ref="scrollBox"
-            class="h-full overflow-y-auto p-0 font-mono text-[15px] leading-relaxed custom-scrollbar bg-white">
+            class="h-full overflow-y-auto p-0 font-mono text-[15px] leading-relaxed custom-scrollbar bg-white dark:bg-gray-900">
             <div
                 v-for="(line, i) in lines"
                 :key="i"
                 :class="[
-                    'px-4 py-1 flex gap-3 border-b border-slate-50 last:border-0',
+                    'px-4 py-1 flex gap-3 border-b border-slate-50 dark:border-gray-800 last:border-0',
                     streamKey === 'error'
                         ? 'err-line'
-                        : 'hover:bg-slate-50 transition-colors'
+                        : 'hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors'
                 ]">
                 <span
-                    class="text-slate-300 shrink-0 w-6 text-right select-none">
+                    class="text-slate-300 dark:text-gray-600 shrink-0 w-6 text-right select-none">
                     {{ i + 1 }}
                 </span>
                 <span
-                    class="text-slate-600 break-all"
+                    class="text-slate-600 dark:text-gray-300 break-all"
                     v-html="highlight(line)"></span>
             </div>
         </div>
@@ -89,6 +90,12 @@ onMounted(async () => {
     background: #cbd5e1;
     border-radius: 10px;
 }
+:root.dark .custom-scrollbar::-webkit-scrollbar-track {
+    background: #111827;
+}
+:root.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #4b5563;
+}
 .ts-highlight {
     color: #059669;
     font-weight: 600;
@@ -96,6 +103,10 @@ onMounted(async () => {
 .err-line {
     background-color: #fff1f2;
     color: #be123c;
+}
+:root.dark .err-line {
+    background-color: #1c0a0d;
+    color: #fb7185;
 }
 .viewer-enter-active,
 .viewer-leave-active {

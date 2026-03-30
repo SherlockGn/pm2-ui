@@ -1,9 +1,10 @@
 <template>
     <div
-        class="max-w-md bg-white border border-gray-200 rounded-md shadow-sm overflow-hidden">
+        class="max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm overflow-hidden">
         <div
-            class="flex items-center justify-between px-3 py-2 border-b border-gray-100 bg-gray-50/50">
-            <h2 class="text-xs font-bold text-gray-500 tracking-tight">
+            class="flex items-center justify-between px-3 py-2 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+            <h2
+                class="text-xs font-bold text-gray-500 dark:text-gray-400 tracking-tight">
                 {{ $t('stringList.items') }} ({{ list.length }})
             </h2>
             <button
@@ -14,11 +15,12 @@
             </button>
         </div>
 
-        <div class="divide-y divide-gray-100 max-h-48 overflow-y-auto">
+        <div
+            class="divide-y divide-gray-100 dark:divide-gray-700 max-h-48 overflow-y-auto">
             <div
                 v-for="(item, index) in list"
                 :key="index"
-                class="flex items-center px-2 py-1 hover:bg-gray-50 group">
+                class="flex items-center px-2 py-1 hover:bg-gray-50 dark:hover:bg-gray-800 group">
                 <span class="text-[10px] text-gray-400 w-4 font-mono">
                     {{ index + 1 }}
                 </span>
@@ -26,7 +28,7 @@
                     v-model="list[index]"
                     type="text"
                     placeholder="Value.."
-                    class="flex-1 bg-transparent border-none text-sm px-2 py-1 outline-none focus:ring-0 placeholder-gray-300" />
+                    class="flex-1 bg-transparent border-none text-sm px-2 py-1 outline-none focus:ring-0 text-gray-900 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-600" />
                 <button
                     @click.prevent="remove(index)"
                     class="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 transition-opacity">

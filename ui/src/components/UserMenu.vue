@@ -53,6 +53,12 @@ defineProps({
 const { t, locale } = useI18n()
 const colorMode = useColorMode()
 const appConfig = useAppConfig()
+
+const savedColor = localStorage.getItem('pm2-ui-primary-color')
+if (savedColor) {
+    appConfig.ui.colors.primary = savedColor
+}
+
 const userStore = useUserStore()
 
 const router = useRouter()
@@ -124,6 +130,7 @@ const items = computed(() => [
                 onSelect: e => {
                     e.preventDefault()
                     appConfig.ui.colors.primary = color
+                    localStorage.setItem('pm2-ui-primary-color', color)
                 }
             }))
         },

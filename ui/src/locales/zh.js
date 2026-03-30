@@ -222,6 +222,7 @@ export default {
         uploadBackupFile: '上传备份文件',
         id: '#',
         name: '名称',
+        filterName: '筛选名称…',
         size: '大小',
         processCount: '进程数量',
         deploymentCount: '部署数量',
@@ -333,13 +334,17 @@ export default {
     general: {
         tabs: {
             subscription: '订阅',
-            monitor: '监控'
+            monitor: '监控',
+            preferences: '偏好设置'
         },
         messageSubscriptions: '消息订阅',
         watchOutThePerformance: '注意性能影响',
         monitorIntervalOfDataCollection: '监控数据采集间隔',
         maxSizeOfBufferedMonitorData: '缓冲监控数据最大数量',
-        maxAgeOfBufferedMonitorData: '缓冲监控数据最大时长'
+        maxAgeOfBufferedMonitorData: '缓冲监控数据最大时长',
+        clearPreferences: '清除偏好设置',
+        clearPreferencesDescription:
+            '清除本地存储的偏好设置（主题颜色、外观模式、语言）。清除后页面将重新加载。'
     },
 
     security: {

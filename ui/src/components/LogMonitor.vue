@@ -1,15 +1,18 @@
 <template>
     <div class="flex flex-col">
-        <div class="bg-white border-x border-slate-200 h-1.5 relative">
+        <div
+            class="bg-white dark:bg-gray-900 border-x border-slate-200 dark:border-gray-700 h-1.5 relative">
             <div
                 v-if="isAuto"
                 class="h-full bg-primary-500 transition-all duration-100 ease-linear"
                 :style="{ width: progress + '%' }"></div>
-            <div v-else class="h-full bg-slate-100 w-full opacity-50"></div>
+            <div
+                v-else
+                class="h-full bg-slate-100 dark:bg-gray-700 w-full opacity-50"></div>
         </div>
 
         <div
-            class="bg-white p-6 border-x border-b border-slate-200 rounded-b-2xl">
+            class="bg-white dark:bg-gray-900 p-6 border-x border-b border-slate-200 dark:border-gray-700 rounded-b-2xl">
             <div
                 :class="[
                     'grid gap-6 transition-all duration-500',
@@ -31,7 +34,7 @@
             </div>
             <div
                 v-if="configs.length === 0"
-                class="py-20 text-center border-2 border-dashed border-slate-100 rounded-2xl text-slate-400 italic text-sm">
+                class="py-20 text-center border-2 border-dashed border-slate-100 dark:border-gray-700 rounded-2xl text-slate-400 italic text-sm">
                 {{ $t('logMonitor.noActiveStreams') }}
             </div>
         </div>

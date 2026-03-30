@@ -238,6 +238,7 @@ export default {
         uploadBackupFile: 'Upload backup file',
         id: '#',
         name: 'Name',
+        filterName: 'Filter name...',
         size: 'Size',
         processCount: 'Process Count',
         deploymentCount: 'Deployment Count',
@@ -354,13 +355,17 @@ export default {
     general: {
         tabs: {
             subscription: 'Subscription',
-            monitor: 'Monitor'
+            monitor: 'Monitor',
+            preferences: 'Preferences'
         },
         messageSubscriptions: 'Message subscriptions',
         watchOutThePerformance: 'Watch out the performance',
         monitorIntervalOfDataCollection: 'Monitor interval of data collection',
         maxSizeOfBufferedMonitorData: 'Max size of buffered monitor data',
-        maxAgeOfBufferedMonitorData: 'Max age of buffered monitor data'
+        maxAgeOfBufferedMonitorData: 'Max age of buffered monitor data',
+        clearPreferences: 'Clear preferences',
+        clearPreferencesDescription:
+            'Remove locally stored preferences (theme color, appearance, language). The page will reload after clearing.'
     },
 
     // ─── Security Settings Page ────────────────────────────────────────

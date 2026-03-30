@@ -28,7 +28,11 @@
 
                 <UNavigationMenu
                     :collapsed="collapsed"
-                    :items="navigators"
+                    :items="
+                        collapsed
+                            ? navigators.map(i => i.children).flat()
+                            : navigators
+                    "
                     orientation="vertical" />
             </template>
 

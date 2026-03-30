@@ -227,6 +227,7 @@ export default {
         uploadBackupFile: 'バックアップファイルをアップロード',
         id: '#',
         name: '名前',
+        filterName: '名前でフィルター…',
         size: 'サイズ',
         processCount: 'プロセス数',
         deploymentCount: 'デプロイ数',
@@ -338,14 +339,18 @@ export default {
     general: {
         tabs: {
             subscription: 'サブスクリプション',
-            monitor: 'モニター'
+            monitor: 'モニター',
+            preferences: '設定'
         },
         messageSubscriptions: 'メッセージサブスクリプション',
         watchOutThePerformance: 'パフォーマンスに注意',
         monitorIntervalOfDataCollection: 'モニターデータ収集間隔',
         maxSizeOfBufferedMonitorData:
             'バッファされたモニターデータの最大サイズ',
-        maxAgeOfBufferedMonitorData: 'バッファされたモニターデータの最大期間'
+        maxAgeOfBufferedMonitorData: 'バッファされたモニターデータの最大期間',
+        clearPreferences: '設定をクリア',
+        clearPreferencesDescription:
+            'ローカルに保存された設定（テーマカラー、外観、言語）を削除します。クリア後、ページがリロードされます。'
     },
 
     security: {

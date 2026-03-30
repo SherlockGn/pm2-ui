@@ -4,7 +4,7 @@
             <TableCommonAction
                 :table="table"
                 filter-prop="name"
-                :filter-text="$t('backup.name')">
+                :filter-text="$t('backup.filterName')">
                 <UButton
                     color="primary"
                     icon="i-lucide-refresh-ccw"
